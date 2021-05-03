@@ -27,8 +27,10 @@ class Login extends Component {
 										<div className="col-lg-7">
 											<input
 												type="text"
-												placeholder="USERNAME"
+												placeholder="EMAIL"
 												className="form-control my-3 p-4"
+												pattern="^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$'%&*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])$"
+												title="Please enter valid email address"
 												required
 											/>
 										</div>
