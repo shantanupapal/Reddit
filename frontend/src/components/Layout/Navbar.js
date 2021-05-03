@@ -1,7 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import logo from "../../images/reddit-logo.svg";
-import "../../App.css";
 import "./Navbar.css";
 const Navbar = () => {
 	return (
