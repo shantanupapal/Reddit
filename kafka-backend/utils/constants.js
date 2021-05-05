@@ -20,5 +20,7 @@ module.exports = {
 		INVALID_INPUTS: "Invalid Inputs",
 		DATA_ALREADY_EXISTS: "Data Already Exists",
 		DATA_NOT_FOUND: "Data doesn't Exists",
+		EMAIL_EXISTS: "EMAIL_EXISTS",
+		SERVER_ERROR: "SERVER_ERROR",
 	},
 };

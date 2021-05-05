@@ -37,7 +37,7 @@ class Profile extends Component {
 										<div>
 											<form>
 												<div class="form-group">
-													<label for="image">Change your avatar: </label>
+													<label htmlFor="image">Change your avatar: </label>
 													<input
 														type="file"
 														className="form-control-file"

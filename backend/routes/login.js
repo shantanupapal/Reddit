@@ -21,37 +21,32 @@ router.post("/", async (req, res) => {
 		logger.error(msg);
 		return res.status(STATUS_CODE.BAD_REQUEST).send(error.details[0].message);
 	}
-	let sql = `CALL Password_get('${req.body.email_id}');`;
+	let sql = `CALL get_UserPassword('${req.body.email}');`;
 	pool.query(sql, (err, sqlResult) => {
 		if (err) {
 			msg.status = STATUS_CODE.INTERNAL_SERVER_ERROR;
 			logger.error(err);
 			return res
 				.status(STATUS_CODE.INTERNAL_SERVER_ERROR)
-				.send(MESSAGES.INTERNAL_SERVER_ERROR);
+				.send(MESSAGES.SERVER_ERROR);
 		}
-		if (sqlResult && sqlResult.length > 0 && sqlResult[0][0]) {
+		if (sqlResult && sqlResult.length > 0 && sqlResult[0][0].status === 1) {
 			if (passwordHash.verify(req.body.password, sqlResult[0][0].password)) {
 				let msg = {
-					route: "login",
-					user_id: sqlResult[0][0].user_id,
+					userid: sqlResult[0][0].userid,
 				};
-
-				kafka.make_request("account", msg, function (err, results) {
+				kafka.make_request("login", msg, function (err, results) {
 					if (err) {
 						msg.error = err.data;
 						logger.error(msg);
 						return res
 							.status(STATUS_CODE.INTERNAL_SERVER_ERROR)
-							.send(MESSAGES.INTERNAL_SERVER_ERROR);
+							.send(MESSAGES.SERVER_ERROR);
 					} else {
 						const payload = {
-							email_id: req.body.email_id,
-							user_id: sqlResult[0][0].user_id,
-							first_name: results.data.first_name,
-							last_name: results.data.last_name,
-							user_name: results.data.user_name,
-							user_image: results.data.user_image,
+							userid: sqlResult[0][0].userid,
+							email: results.data.email,
+							userName: results.data.userName,
 						};
 						const token = jwt.sign(payload, secret, {
 							expiresIn: 900000, // in seconds
@@ -60,7 +55,7 @@ router.post("/", async (req, res) => {
 						msg.status = STATUS_CODE.SUCCESS;
 						msg.token = jwtToken;
 						logger.info(msg);
-						return res.status(STATUS_CODE.SUCCESS).send(jwtToken);
+						return res.status(STATUS_CODE.SUCCESS).send({ token: jwtToken });
 					}
 				});
 			} else {
@@ -68,8 +63,12 @@ router.post("/", async (req, res) => {
 				logger.info(msg);
 				return res
 					.status(STATUS_CODE.UNAUTHORIZED)
-					.send(MESSAGES.INVALID_CREDENTIALS);
+					.send(MESSAGES.INCORRECT_PASSWORD);
 			}
+		} else {
+			msg.status = STATUS_CODE.USER_NOT_FOUND;
+			logger.info(msg);
+			return res.status(STATUS_CODE.USER_NOT_FOUND).send(MESSAGES.NO_USER);
 		}
 	});
 });

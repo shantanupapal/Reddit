@@ -3,11 +3,11 @@ const Joi = require("joi");
 
 //Validation for User Signup API
 function validateUser(user) {
-	const schema = {
-		username: Joi.string().required(),
+	const schema = Joi.object({
+		userName: Joi.string().required(),
 		email: Joi.string().email().required(),
 		password: Joi.string().required(),
-	};
-	return Joi.validate(user, schema);
+	});
+	return schema.validate(user);
 }
 exports.validateUser = validateUser;

@@ -5,11 +5,15 @@ module.exports = {
 		BAD_REQUEST: 400,
 		UNAUTHORIZED: 401,
 		INTERNAL_SERVER_ERROR: 500,
+		USER_NOT_FOUND: 404,
 	},
 	MESSAGES: {
 		INVALID_CREDENTIALS: "Invalid Credentials",
 		INTERNAL_SERVER_ERROR: "Internal Server Error",
 		SUCCESS: "Successful",
 		INVALID_STATE: "State Name is not valid",
+		INCORRECT_PASSWORD: "INCORRECT_PASSWORD",
+		NO_USER: "NO_USER",
+		SERVER_ERROR: "SERVER_ERROR",
 	},
 };
