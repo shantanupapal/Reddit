@@ -5,6 +5,7 @@ import userSignup from "../../redux/actions/signupAction";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { Redirect } from "react-router";
+import jwtDecode from "jwt-decode";
 import "./signup.css";
 class Signup extends Component {
 	constructor(props) {
@@ -40,13 +41,19 @@ class Signup extends Component {
 		let redirectVar = null;
 		//console.log("this.props.user", this.props.user);
 		if (this.props.user) {
-			if (this.props.user && this.props.user.userid) {
-				console.log("Redirecting to Dashboard");
-				localStorage.setItem("userid", this.props.user.userid);
-				localStorage.setItem("email", this.props.user.email);
-				localStorage.setItem("userName", this.props.user.userName);
-				//localStorage.setItem("token", this.props.user.token);
-				redirectVar = <Redirect to="/Profile" />;
+			if (this.props.user && this.props.user.token) {
+				localStorage.setItem("token", this.props.user.token);
+				const authToken = this.props.user.token;
+				const jwt = authToken.split(" ")[1];
+				let userData = jwtDecode(jwt);
+				if (userData) {
+					console.log("userData is:", userData);
+					localStorage.setItem("userid", userData.userid);
+					localStorage.setItem("email", userData.email);
+					localStorage.setItem("userName", userData.userName);
+					console.log("Redirecting to home");
+					redirectVar = <Redirect to="/Profile" />;
+				}
 			} else if (this.props.user === "EMAIL_EXISTS" && this.state.signupFlag) {
 				displayMessage =
 					"This Email id is already registered with us, Please use different Email id";
