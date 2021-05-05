@@ -5,6 +5,7 @@ import Login from "./Login/Login";
 import Signup from "./Signup/Signup";
 import Profile from "./Profile/Profile";
 import CreateCommunity from "./Communities/CreateCommunity/CreateCommunity";
+import CommunityHome from "./Communities/CommunityHome";
 
 const Main = () => {
 	return (
@@ -14,6 +15,7 @@ const Main = () => {
 			<Route exact path="/Signup" component={Signup} />
 			<Route exact path="/Profile" component={Profile} />
 			<Route exact path="/CreateCommunity" component={CreateCommunity} />
+			<Route exact path="/community/:id" component={CommunityHome} />
 		</div>
 	);
 };
