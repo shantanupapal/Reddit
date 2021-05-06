@@ -31,7 +31,7 @@ class NavDropDown extends Component {
 							alt="icon"
 							style={{ width: "40px", height: "40px" }}
 						/>
-						Hi, {this.state.userName}
+						{this.state.userName}
 					</Dropdown.Toggle>
 					<Dropdown.Menu id="dropdown-menu-align-right">
 						<Dropdown.Item>
@@ -41,6 +41,16 @@ class NavDropDown extends Component {
 								style={{ color: "black" }}
 							>
 								Profile
+							</Link>
+						</Dropdown.Item>
+
+						<Dropdown.Item>
+							<Link
+								to="/ChangePassword"
+								className="nav-link"
+								style={{ color: "black" }}
+							>
+								Change Password
 							</Link>
 						</Dropdown.Item>
 

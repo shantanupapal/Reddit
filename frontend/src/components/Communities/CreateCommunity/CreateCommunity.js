@@ -7,7 +7,7 @@ class CreateCommunity extends Component {
 		return (
 			<div className="container-fluid">
 				<NavbarMain />
-				<div className="container">
+				<div className="container float-left">
 					<div className="row">
 						<div className="col-lg-2">
 							<img src={sidebar} alt="sidebar" className="img-fluid" />
