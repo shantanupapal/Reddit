@@ -12,20 +12,20 @@ class Profile extends Component {
 		this.state = {
 			userId: localStorage.getItem("userid"),
 			topicOptions: [
-				{ name: "Animals and Pets" },
-				{ name: "Art" },
-				{ name: "Beauty and Makeup" },
-				{ name: "Crypto" },
-				{ name: "Culture" },
-				{ name: "Fashion" },
-				{ name: "History" },
-				{ name: "Fashion" },
-				{ name: "Health" },
-				{ name: "History" },
-				{ name: "Politics" },
-				{ name: "Programming" },
-				{ name: "Travel" },
-				{ name: "World News" },
+				{ name: "Animals and Pets", value: "animalandpets" },
+				{ name: "Art", value: "arts" },
+				{ name: "Beauty and Makeup", value: "beautyandmakeup" },
+				{ name: "Crypto", value: "crypto" },
+				{ name: "Culture", value: "culture" },
+				{ name: "Fashion", value: "fashion" },
+				{ name: "History", value: "history" },
+				{ name: "Fashion", value: "fashion" },
+				{ name: "Health", value: "health" },
+				{ name: "History", value: "history" },
+				{ name: "Politics", value: "politics" },
+				{ name: "Programming", value: "programming" },
+				{ name: "Travel", value: "travel" },
+				{ name: "World News", value: "worldnews" },
 			],
 			selectedTopics: [],
 		};
@@ -47,13 +47,31 @@ class Profile extends Component {
 		this.setState({
 			selectedTopics: data,
 		});
-		console.log("selected", this.state.selectedMembers);
+		console.log("selected", this.state.selectedTopics);
 	};
 	componentDidMount() {
 		const user = { userid: localStorage.getItem("userid") };
 		console.log("current user ID: ", user);
 		this.props.getUser(user);
 	}
+
+	onSubmit = (e) => {
+		e.preventDefault();
+		let selectedTopics = this.state.selectedTopics;
+		console.log("selectedTopics: ", selectedTopics);
+
+		const updatedData = {
+			userName: this.state.userName,
+			gender: this.state.gender,
+			location: this.state.location,
+			description: this.state.description,
+			userid: localStorage.getItem("userid"),
+			topics: selectedTopics,
+		};
+
+		console.log("this  Data: ", updatedData);
+		this.props.updateUser(updatedData);
+	};
 
 	componentWillReceiveProps(nextProps) {
 		if (nextProps.user) {
@@ -62,13 +80,11 @@ class Profile extends Component {
 			let userData = {
 				userid: user.userid || this.state.userId,
 				userName: user.userName || this.state.userName,
-				email: user.email || this.state.email,
-				phone: user.phone || this.state.phone,
 				userImage: user.userImage || this.state.userImage,
 				gender: user.gender || this.state.gender,
 				location: user.location || this.state.location,
 				description: user.description || this.state.description,
-				topics: user.description || this.state.topics,
+				topics: user.topics || this.state.topics,
 			};
 
 			this.setState(userData);
@@ -115,7 +131,7 @@ class Profile extends Component {
 						<div className="col-6">
 							<div class="card">
 								<div class="card-body">
-									<form>
+									<form onSubmit={this.onSubmit}>
 										<div className="form-group">
 											<label htmlFor="username">Your name</label>
 											<input
@@ -151,6 +167,7 @@ class Profile extends Component {
 												className="form-control"
 												id="location"
 												onChange={this.onChange}
+												defaultValue={this.state.location}
 											/>
 										</div>
 
@@ -163,18 +180,7 @@ class Profile extends Component {
 												id="description"
 												required
 												onChange={this.onChange}
-											/>
-										</div>
-
-										<div className="form-group">
-											<label htmlFor="password">Password</label>
-											<input
-												type="password"
-												name="password"
-												className="form-control"
-												id="password"
-												required
-												onChange={this.onChange}
+												defaultValue={this.state.description}
 											/>
 										</div>
 

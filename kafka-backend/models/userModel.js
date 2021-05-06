@@ -4,14 +4,12 @@ const Schema = mongoose.Schema;
 const userSchema = new Schema(
 	{
 		userName: { type: String, trim: true },
-		//password: { type: String },
 		email: { type: String, trim: true, lowercase: true },
-		phone: { type: String, trim: true },
 		gender: { type: String, trim: true },
 		location: { type: String },
 		description: { type: String, trim: true },
 		userImage: { type: String },
-		topics: [String],
+		topics: [{ name: { type: String }, value: { type: String } }],
 		createdAt: { type: Date, default: Date.now },
 	},
 	{

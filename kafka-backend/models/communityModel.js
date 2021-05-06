@@ -22,7 +22,7 @@ const communitySchema = new Schema(
 			},
 		],
 		posts: [{ type: Schema.Types.ObjectId, ref: "post" }],
-		topics: [String],
+		topics: { type: String, trim: true },
 		votes: { type: Number },
 		createdBy: { type: mongoose.Schema.Types.ObjectId, ref: "user" },
 		createdAt: { type: Date, default: Date.now },

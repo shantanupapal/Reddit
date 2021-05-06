@@ -31,17 +31,9 @@ export const updateUser = (userProfileData) => (dispatch) => {
 		.then((response) => {
 			console.log("response for update profile is", response);
 			if (response.status === 200) {
-				console.log("updated username is : ", userProfileData.username);
-				localStorage.setItem("username", userProfileData.username);
+				console.log("updated username is : ", userProfileData.userName);
+				localStorage.setItem("userName", userProfileData.userName);
 				alert("User Profile updated successfully!");
-			} else if (response.status === 209) {
-				alert("Update Failed! Please Try Again");
-			} else if (response.status === 207) {
-				alert("No User Found");
-			} else if (response.status === 299) {
-				alert("EmailId already exists, use another emailId");
-			} else {
-				alert("Server Error!");
 			}
 			return dispatch({
 				type: UPDATE_USER,
