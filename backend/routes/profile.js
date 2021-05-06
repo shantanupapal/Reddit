@@ -54,6 +54,26 @@ router.post("/changepassword", checkAuth, async (req, res) => {
 	});
 });
 
-module.exports = router;
+router.post("/updateuser", checkAuth, async (req, res) => {
+	// const { error } = validateProfile(req.body);
+	// if (error) {
+	//     return res.status(STATUS_CODE.BAD_REQUEST).send(error.details[0].message);
+	// }
 
+	let msg = {};
+	msg = req.body;
+	msg.route = "update_profile";
+
+	kafka.make_request("profile", msg, function (err, results) {
+		if (err) {
+			msg.error = err.data;
+			logger.error(msg);
+			return res.status(err.status).send(err.data);
+		} else if (results) {
+			msg.status = results.status;
+			logger.info(msg);
+			return res.status(results.status).send(results.data);
+		}
+	});
+});
 module.exports = router;

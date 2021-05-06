@@ -17,7 +17,6 @@ let getProfile = async (msg, callback) => {
 				userid: user._id,
 				userName: user.userName,
 				email: user.email,
-				phone: user.phone,
 				gender: user.gender,
 				location: user.location,
 				description: user.description,
