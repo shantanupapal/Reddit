@@ -6,6 +6,10 @@ var connectMongoDB = require("./utils/dbConnection");
 const signupService = require("./services/signup");
 const loginService = require("./services/login");
 const profileService = require("./services/profile");
+const myCommunityService = require("./services/myCommunity");
+const createCommunityService = require("./services/createCommunity");
+
+
 //MongoDB connection
 connectMongoDB();
 
@@ -50,3 +54,5 @@ const response = (data, res, err, producer) => {
 handleTopicRequest("signup", signupService);
 handleTopicRequest("login", loginService);
 handleTopicRequest("profile", profileService);
+handleTopicRequest("mycommunity", myCommunityService);
+handleTopicRequest("createCommunity", createCommunityService);
