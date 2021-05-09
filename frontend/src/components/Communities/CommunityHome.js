@@ -154,7 +154,20 @@ class Users extends Component {
 	};
 	render() {
 		console.log(this.props);
-		return <div className="col-lg-12 border m-2">Users</div>;
+		return (
+			<div className="m-2">
+				{this.props.users &&
+					this.props.users.map((user) => {
+						return (
+							<div className="border p-2">
+								<li>
+									{user.userName} - {user.email}
+								</li>
+							</div>
+						);
+					})}
+			</div>
+		);
 	}
 }
 
@@ -186,7 +199,7 @@ class CommunityHome extends Component {
 			description: "Community for memes",
 			images: "https://homepages.cae.wisc.edu/~ece533/images/airplane.png",
 			rules: [{ title: "Rule 1", desc: "Rule 1" }],
-			communityMembers: [{ id: 1, name: "PG" }],
+			communityMembers: [{ id: 1, userName: "PG", email: "pg@hotmail.com" }],
 			posts: [
 				{
 					title: "Post1",
