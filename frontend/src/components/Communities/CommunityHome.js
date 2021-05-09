@@ -28,11 +28,10 @@ class SinglePost extends Component {
 							<span className="pl-2">{this.props.post.votes}</span>
 						</span>
 					</div>
-					<div className="">
+					<div className="border-bottom pb-2">
 						<span>{this.props.post.body} </span>
 					</div>
-					<hr></hr>
-					<div className="">
+					<div className="pt-2">
 						<div className="text-xs font-extralight">Comments</div>
 						{this.props.post.comments &&
 							this.props.post.comments.map((comment) => {
@@ -176,12 +175,37 @@ class Comment extends Component {
 		super();
 		this.state = { communityData: {} };
 	}
-	createPost = () => {
-		alert("Create Post");
+	upvoteComment = () => {
+		alert("Upvote Comment");
+	};
+	downvoteComment = () => {
+		alert("Downvote Comment");
+	};
+	replyToComment = () => {
+		alert("Oppen reply modal");
 	};
 	render() {
 		console.log(this.props);
-		return <div className="col-lg-12 border">Comment</div>;
+
+		return (
+			<div className="border p-2">
+				<li>
+					<span>{this.props.comment.content}</span>
+					<span className="float-right">
+						<button className="btn btn-link" onClick={this.replyToComment}>
+							Reply
+						</button>
+						<button className="btn btn-link" onClick={this.upvoteComment}>
+							Upvote
+						</button>
+						<button className="btn btn-link" onClick={this.downvoteComment}>
+							Downvote
+						</button>
+						<span className="pl-2">{this.props.comment.votes}</span>
+					</span>
+				</li>
+			</div>
+		);
 	}
 }
 
