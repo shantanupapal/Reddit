@@ -223,7 +223,7 @@ class Users extends Component {
 class Comment extends Component {
 	constructor() {
 		super();
-		this.state = { communityData: {} };
+		this.state = { showModal: false, comment: "" };
 	}
 	upvoteComment = () => {
 		alert("Upvote Comment");
@@ -232,13 +232,46 @@ class Comment extends Component {
 		alert("Downvote Comment");
 	};
 	replyToComment = () => {
-		alert("Oppen reply modal");
+		this.setState({ showModal: true });
+	};
+	closeModal = () => {
+		this.setState({ showModal: false });
+	};
+	changeComment = (e) => {
+		this.setState({ comment: e.target.value });
+	};
+	submitComment = () => {
+		alert("Api call to add comment to Comment");
+		this.setState({ showModal: false });
 	};
 	render() {
 		console.log(this.props);
 
 		return (
 			<div className="py-2 border">
+				<Modal show={this.state.showModal} size="lg" aria-labelledby="contained-modal-title-vcenter" centered>
+					<Modal.Header closeButton>
+						<Modal.Title id="contained-modal-title-vcenter">Reply To Comment</Modal.Title>
+					</Modal.Header>
+					<Modal.Body>
+						<h4>Add Comment</h4>
+						<input
+							name="addCommentToComment"
+							id="addCommentToComment"
+							type="text"
+							placeholder="Reply"
+							className="form-control my-3 p-4"
+							required
+							onChange={this.changeComment}
+						/>
+					</Modal.Body>
+					<Modal.Footer>
+						<Button onClick={this.closeModal}>Close</Button>
+						<Button variant="success" onClick={this.submitComment}>
+							Comment
+						</Button>
+					</Modal.Footer>
+				</Modal>
 				<li>
 					<span>{this.props.comment.content}</span>
 					<span className="float-right">
