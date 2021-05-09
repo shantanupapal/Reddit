@@ -11,6 +11,9 @@ class SinglePost extends Component {
 	upvotePost = () => {
 		alert("upvote Post");
 	};
+	replyToPost = () => {
+		alert("reply Post");
+	};
 	render() {
 		console.log(this.props);
 		return (
@@ -19,11 +22,14 @@ class SinglePost extends Component {
 					<div className="">
 						<span className="text-xl font-semibold">{this.props.post.title} </span>
 						<span className="float-right">
+							<button className="btn btn-link" onClick={this.replyToPost}>
+								Reply
+							</button>
 							<button className="btn btn-link" onClick={this.upvotePost}>
-								upvote
+								Upvote
 							</button>
 							<button className="btn btn-link" onClick={this.downvotePost}>
-								downvote
+								Downvote
 							</button>
 							<span className="pl-2">{this.props.post.votes}</span>
 						</span>
@@ -67,7 +73,7 @@ class Posts extends Component {
 	render() {
 		console.log(this.props);
 		return (
-			<div>
+			<div className="">
 				<div className="col-lg-12 border m-2 pt-2 pb-4">
 					<span>
 						<input
