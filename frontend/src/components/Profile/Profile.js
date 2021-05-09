@@ -153,6 +153,9 @@ class Profile extends Component {
 												onChange={this.onChange}
 												value={this.state.gender}
 											>
+												<option value="" selected disabled hidden>
+													Select Gender
+												</option>
 												<option value="male">Male</option>
 												<option value="female">Female</option>
 												<option value="other">Other</option>

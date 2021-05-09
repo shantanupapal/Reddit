@@ -14,15 +14,26 @@ let updateProfile = async (msg, callback) => {
 			return callback(err, null);
 		} else {
 			user.userName = msg.userName || user.userName;
-			user.gender = msg.gender;
-			user.location = msg.location;
-			user.description = msg.description;
-			user.topics = msg.topics;
+			user.gender = msg.gender || user.gender;
+			user.location = msg.location || user.location;
+			user.description = msg.description || user.description;
+			user.topics = msg.topics || user.topics;
 
 			const updatedUser = await user.save();
 			if (updatedUser) {
+				let profile = {
+					userid: user._id,
+					userName: user.userName,
+					email: user.email,
+					gender: user.gender,
+					location: user.location,
+					description: user.description,
+					userImage: user.userImage,
+					topics: user.topics,
+					createdAt: user.createdAt,
+				};
 				response.status = STATUS_CODE.SUCCESS;
-				response.data = MESSAGES.UPDATE_SUCCESSFUL;
+				response.data = JSON.stringify(profile);
 				return callback(null, response);
 			} else {
 				err.status = STATUS_CODE.INTERNAL_SERVER_ERROR;
