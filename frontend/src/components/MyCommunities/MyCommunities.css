@@ -1,0 +1,24 @@
+.root{
+    margin-top: 2%;
+}
+
+.media{
+    height: 0;
+    padding-top: 56.25%;
+}
+
+textarea{
+    height: 150px;
+}
+
+.rules-font > div > span:first-of-type{
+    font-size: large;
+}
+
+.rules-font > div > span{
+    font-size: medium;
+}
+
+.community-title > div > span:first-of-type{
+    font-size: xx-large;
+}
