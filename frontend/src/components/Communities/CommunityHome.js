@@ -66,9 +66,12 @@ class SinglePost extends Component {
 					<div className="">
 						<span className="text-xl font-semibold">{this.props.post.title} </span>
 						<span className="float-right">
-							<button className="btn btn-link" onClick={this.replyToPost}>
-								Reply
-							</button>
+							{this.props.checkCommunityUserStatus() ? (
+								<button className="btn btn-link" onClick={this.replyToPost}>
+									Reply
+								</button>
+							) : null}
+
 							<button className="btn btn-link" onClick={this.upvotePost}>
 								Upvote
 							</button>
@@ -85,7 +88,12 @@ class SinglePost extends Component {
 						<div className="text-xs font-extralight">Comments</div>
 						{this.props.post.comments &&
 							this.props.post.comments.map((comment) => {
-								return <Comment comment={comment} />;
+								return (
+									<Comment
+										checkCommunityUserStatus={this.props.checkCommunityUserStatus}
+										comment={comment}
+									/>
+								);
 							})}
 					</div>
 				</div>
@@ -118,47 +126,59 @@ class Posts extends Component {
 		console.log(this.props);
 		return (
 			<div className="">
-				<div className="col-lg-12 border m-2 pt-2 pb-4">
-					<span>
-						<input
-							name="postTitle"
-							id="postTitle"
-							type="text"
-							placeholder="New Post Title"
-							className="form-control my-3 p-4"
-							required
-							onChange={this.changePostTitle}
-						/>
-						<input
-							name="postBody"
-							id="postBody"
-							type="text"
-							placeholder="New Post Title"
-							className="form-control my-3 p-4"
-							required
-							onChange={this.changePostBody}
-						/>
-						<input
-							name="link"
-							id="link"
-							type="text"
-							placeholder="External Link"
-							className="form-control my-3 p-4"
-							onChange={this.changePostLink}
-						/>
-						<input type="file" name="file" onChange={this.onFileChangeHandler} placeholder="Image" />
-					</span>
-					<span className="float-right">
-						<button className="btn btn-primary" style={{ borderRadius: "25px" }} onClick={this.createPost}>
-							Post
-						</button>
-					</span>
-				</div>
+				{this.props.checkCommunityUserStatus() ? (
+					<div className="col-lg-12 border m-2 pt-2 pb-4">
+						<span>
+							<input
+								name="postTitle"
+								id="postTitle"
+								type="text"
+								placeholder="New Post Title"
+								className="form-control my-3 p-4"
+								required
+								onChange={this.changePostTitle}
+							/>
+							<input
+								name="postBody"
+								id="postBody"
+								type="text"
+								placeholder="New Post Title"
+								className="form-control my-3 p-4"
+								required
+								onChange={this.changePostBody}
+							/>
+							<input
+								name="link"
+								id="link"
+								type="text"
+								placeholder="External Link"
+								className="form-control my-3 p-4"
+								onChange={this.changePostLink}
+							/>
+							<input type="file" name="file" onChange={this.onFileChangeHandler} placeholder="Image" />
+						</span>
+						<span className="float-right">
+							<button
+								className="btn btn-primary"
+								style={{ borderRadius: "25px" }}
+								onClick={this.createPost}
+							>
+								Post
+							</button>
+						</span>
+					</div>
+				) : null}
+
 				<div className="row">
 					<div className="col-lg-12">
 						{this.props.posts &&
 							this.props.posts.map((post) => {
-								return <SinglePost post={post} />;
+								return (
+									<SinglePost
+										checkCommunityUserStatus={this.props.checkCommunityUserStatus}
+										post={post}
+									/>
+								);
 							})}
 					</div>
 				</div>
@@ -275,9 +295,12 @@ class Comment extends Component {
 				<li>
 					<span>{this.props.comment.content}</span>
 					<span className="float-right">
-						<button className="btn btn-link" onClick={this.replyToComment}>
-							Reply
-						</button>
+						{this.props.checkCommunityUserStatus() ? (
+							<button className="btn btn-link" onClick={this.replyToComment}>
+								Reply
+							</button>
+						) : null}
+
 						<button className="btn btn-link" onClick={this.upvoteComment}>
 							Upvote
 						</button>
@@ -353,6 +376,16 @@ class CommunityHome extends Component {
 			posts: ["Sameple Post A", "Sample Post B"],
 		});
 	};
+	checkCommunityUserStatus = () => {
+		return false;
+		// let acceptStatus = null;
+		// this.state.communityData.communityMembers.map((member) => {
+		// 	if (member._id === loggedInUser.id) {
+		// 		acceptStatus = member.status;
+		// 	}
+		// });
+		// return acceptStatus;
+	};
 
 	joinCommunity = () => {
 		alert("Join Community");
@@ -374,13 +407,19 @@ class CommunityHome extends Component {
 							<div className="flex justify-between">
 								<div className="text-3xl">{this.state.communityData.communityName}</div>
 								<div className="float-right">
-									<button
-										className="btn btn-primary"
-										style={{ borderRadius: "25px" }}
-										onClick={this.joinCommunity}
-									>
-										Join
-									</button>
+									{this.checkCommunityUserStatus() === null ? (
+										<Button onClick={this.joinCommunity} variant="success">
+											Join
+										</Button>
+									) : this.checkCommunityUserStatus() === true ? (
+										<Button onClick={this.joinCommunity} variant="danger">
+											Leave
+										</Button>
+									) : (
+										<Button disabled variant="warning">
+											Pending
+										</Button>
+									)}
 								</div>
 							</div>
 							<div className="font-extralight text-lg">{this.state.communityData.description}</div>
@@ -433,7 +472,13 @@ class CommunityHome extends Component {
 								<Route
 									exact={true}
 									path="/community/:id"
-									component={(props) => <Posts posts={this.state.communityData.posts} {...props} />}
+									component={(props) => (
+										<Posts
+											checkCommunityUserStatus={this.checkCommunityUserStatus}
+											posts={this.state.communityData.posts}
+											{...props}
+										/>
+									)}
 								/>
 								<Route
 									path="/community/:id/rules"
@@ -446,11 +491,6 @@ class CommunityHome extends Component {
 									)}
 								/>
 							</Switch>
-
-							{/* {this.state.posts &&
-								this.state.communityData.posts.map((post) => {
-									return <Post post={post} />;
-								})} */}
 						</div>
 					</div>
 				</div>
