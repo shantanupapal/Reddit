@@ -15,7 +15,7 @@ const Main = () => {
 			<Route exact path="/Signup" component={Signup} />
 			<Route exact path="/Profile" component={Profile} />
 			<Route exact path="/CreateCommunity" component={CreateCommunity} />
-			<Route exact path="/community/:id" component={CommunityHome} />
+			<Route exact={false} path="/community/:id" component={CommunityHome} />
 		</div>
 	);
 };
