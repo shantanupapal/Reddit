@@ -244,6 +244,8 @@ class CommunityHome extends Component {
 									</button>
 								</div>
 							</div>
+							<div className="font-extralight text-lg">{this.state.communityData.description}</div>
+
 							<div className="row">
 								<div className="col-lg-12">
 									<div className="flex ">
