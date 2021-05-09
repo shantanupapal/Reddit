@@ -3,8 +3,14 @@ import NavbarMain from "../Layout/NavbarMain";
 import sidebar from "../../images/community-sidebar.png";
 import { NavLink } from "react-router-dom";
 import { Route, Switch } from "react-router";
+import Modal from "react-bootstrap/Modal";
+import { Button } from "react-bootstrap";
 
 class SinglePost extends Component {
+	constructor() {
+		super();
+		this.state = { comment: "", showReplyToPostModal: false };
+	}
 	downvotePost = () => {
 		alert("downvote Post");
 	};
@@ -12,12 +18,50 @@ class SinglePost extends Component {
 		alert("upvote Post");
 	};
 	replyToPost = () => {
-		alert("reply Post");
+		this.setState({ showReplyToPostModal: true });
+	};
+	closeReplyToPostModal = () => {
+		this.setState({ showReplyToPostModal: false });
+	};
+	changePostComment = (e) => {
+		this.setState({ comment: e.target.value });
+	};
+	commentOnPost = () => {
+		alert("Api call to add comment to Post");
+		this.setState({ showReplyToPostModal: false });
 	};
 	render() {
 		console.log(this.props);
 		return (
 			<div>
+				<Modal
+					show={this.state.showReplyToPostModal}
+					size="lg"
+					aria-labelledby="contained-modal-title-vcenter"
+					centered
+				>
+					<Modal.Header closeButton>
+						<Modal.Title id="contained-modal-title-vcenter">Reply To Post</Modal.Title>
+					</Modal.Header>
+					<Modal.Body>
+						<h4>Add Comment</h4>
+						<input
+							name="addCommentToPost"
+							id="addCommentToPost"
+							type="text"
+							placeholder="Reply"
+							className="form-control my-3 p-4"
+							required
+							onChange={this.changePostComment}
+						/>
+					</Modal.Body>
+					<Modal.Footer>
+						<Button onClick={this.closeReplyToPostModal}>Close</Button>
+						<Button variant="success" onClick={this.commentOnPost}>
+							Comment
+						</Button>
+					</Modal.Footer>
+				</Modal>
 				<div className="flex flex-col border p-2 m-2">
 					<div className="">
 						<span className="text-xl font-semibold">{this.props.post.title} </span>
