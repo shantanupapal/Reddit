@@ -188,7 +188,7 @@ class Comment extends Component {
 		console.log(this.props);
 
 		return (
-			<div className="border p-2">
+			<div className="py-2 border">
 				<li>
 					<span>{this.props.comment.content}</span>
 					<span className="float-right">
@@ -204,6 +204,10 @@ class Comment extends Component {
 						<span className="pl-2">{this.props.comment.votes}</span>
 					</span>
 				</li>
+				{this.props.comment.nestedComments &&
+					this.props.comment.nestedComments.map((nestedComments) => {
+						return <li key={nestedComments.content}>{nestedComments.content}</li>;
+					})}
 			</div>
 		);
 	}
@@ -237,13 +241,15 @@ class CommunityHome extends Component {
 							votes: 4,
 							commentedBy: { _id: 1, name: "PG" },
 							commentedAt: "5/5/2021",
-							nestedComments: {
-								content: "Nested Comment 1",
-								votes: 2,
-								commentedBy: { _id: 1, name: "PG" },
-								commentedAt: "6/5/2021",
-								nestedComments: {},
-							},
+							nestedComments: [
+								{
+									content: "Nested Comment 1",
+									votes: 2,
+									commentedBy: { _id: 1, name: "PG" },
+									commentedAt: "6/5/2021",
+									nestedComments: {},
+								},
+							],
 						},
 					],
 					createdBy: { _id: 1, name: "PG" },
