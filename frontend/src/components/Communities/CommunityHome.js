@@ -129,13 +129,15 @@ class Rules extends Component {
 	render() {
 		console.log(this.props);
 		return (
-			<div className="col-lg-12 border m-2">
+			<div className="m-2">
 				{this.props.rules &&
 					this.props.rules.map((rule) => {
 						return (
-							<li>
-								{rule.title} - {rule.desc}
-							</li>
+							<div className="border p-2">
+								<li>
+									{rule.title} - {rule.desc}
+								</li>
+							</div>
 						);
 					})}
 			</div>
