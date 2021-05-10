@@ -404,14 +404,17 @@ class CommunityHome extends Component {
 		});
 	};
 	checkCommunityUserStatus = () => {
-		return false;
-		// let acceptStatus = null;
-		// this.state.communityData.communityMembers.map((member) => {
-		// 	if (member._id === loggedInUser.id) {
-		// 		acceptStatus = member.status;
-		// 	}
-		// });
-		// return acceptStatus;
+		return true;
+		let acceptStatus = null;
+		let loggedInUserId = localStorage.getItem("user_id");
+		if (this.state.communityData.communityMembers) {
+			this.state.communityData.communityMembers.map((member) => {
+				if (member._id === loggedInUserId) {
+					acceptStatus = member.status;
+				}
+			});
+		}
+		return acceptStatus;
 	};
 
 	joinCommunity = () => {

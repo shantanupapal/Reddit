@@ -19,3 +19,32 @@
 	min-height: 1px;
 	padding: 1rem;
 }
+
+/* change Password*/
+.auth-row {
+	background: white;
+	border-radius: 30px;
+	box-shadow: 12px 12px 22px grey;
+}
+.theme {
+	border-top-left-radius: 30px;
+	border-bottom-left-radius: 30px;
+}
+
+.btn1 {
+	border: none;
+	outline: none;
+	height: 50px;
+	width: 100%;
+	background-color: #339dff;
+	color: white;
+	border-radius: 4px;
+	font-weight: bold;
+	font-size: 20px;
+}
+
+.btn1:hover {
+	background: white;
+	border: 1px solid;
+	color: #339dff;
+}

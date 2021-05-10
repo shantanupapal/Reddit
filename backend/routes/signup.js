@@ -7,7 +7,10 @@ const pool = require("../utils/mysqlConnection");
 const { validateUser } = require("../validations/signupValidations");
 const { STATUS_CODE, MESSAGES } = require("../utils/constants");
 const logger = require("../utils/logger");
-
+const { secret } = require("../utils/config");
+const jwt = require("jsonwebtoken");
+const { auth } = require("../utils/passport");
+auth();
 router.post("/", async (req, res) => {
 	console.log("req.body: ", req.body);
 	let msg = req.body;
@@ -42,13 +45,19 @@ router.post("/", async (req, res) => {
 						sqlResult[0][0].status === "USER_ADDED"
 					) {
 						msg.status = STATUS_CODE.SUCCESS;
-						logger.info(msg);
-						let userData = {
+						let payload = {
 							userName: req.body.userName,
 							email: req.body.email,
 							userid: results.data,
 						};
-						return res.status(STATUS_CODE.SUCCESS).send(userData);
+						const token = jwt.sign(payload, secret, {
+							expiresIn: 900000, // in seconds
+						});
+						let jwtToken = "JWT " + token;
+						msg.status = STATUS_CODE.SUCCESS;
+						msg.token = jwtToken;
+						logger.info(msg);
+						return res.status(STATUS_CODE.SUCCESS).send({ token: jwtToken });
 					}
 				});
 			}
