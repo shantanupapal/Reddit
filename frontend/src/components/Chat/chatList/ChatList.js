@@ -1,34 +1,47 @@
 import React, { useEffect, useState, useRef } from "react";
 import "./chatList.css";
 import ChatListItems from "./ChatListItems";
-import chat1 from "../../../images/chat1.png";
-import chat2 from "../../../images/chat2.png";
-
+import swal from "sweetalert";
 import { backendURI } from "../../../utils/config";
 import axios from "axios";
-const photo = chat1;
-const photo2 = chat2;
 
-export default function ChatList({ allChats, handleClick }) {
+export default function ChatList({ handleClick }) {
     const [display, setdisplay] = useState(false);
     const [options, setoptions] = useState([]);
     const [search, setsearch] = useState("");
+    const [allChats, setallChats] = useState([]);
+    const [allUsers, setallUsers] = useState([]);
+    // const [newChat, setnewChat] = useState(null);
+    const [allNames, setallNames] = useState([]);
     const wrapperRef = useRef(null);
 
+    const user_id = localStorage.getItem("userid");
+    // const user_id = "609453c6b6b2ec490cdbc0ce";
+    const getAllChats = async () => {
+        const Chats = await axios.get(
+            `${backendURI}/chat/getallchats/${user_id}`
+        );
+
+        setallChats(Chats.data);
+    };
+    const names = [];
     useEffect(() => {
-        const names = [];
+        getAllChats();
+
         axios
             .get(`${backendURI}/chat/getallusers`)
             .then((res) => {
                 const user_id = localStorage.getItem("userid");
+                setallUsers(res.data);
+                setoptions(res.data);
                 res.data.forEach((user) => {
                     if (user_id !== user._id) {
-                        names.push(user);
+                        names.push(user.userName);
                     }
                 });
             })
             .then(() => {
-                setoptions(names);
+                setallNames(names);
             })
             .catch((err) => {
                 console.log(err);
@@ -42,6 +55,42 @@ export default function ChatList({ allChats, handleClick }) {
             document.removeEventListener("mousedown", handleClickOutside);
         };
     }, []);
+
+    const addNewChat = async () => {
+        if (!search) {
+            swal(
+                "Opps!",
+                "Please search for a user to start a chat",
+                "warning"
+            );
+        } else {
+            if (allNames.includes(search)) {
+                let new_chat_user;
+                allUsers.forEach((user) => {
+                    if (user.userName === search) {
+                        new_chat_user = user._id;
+                    }
+                });
+
+                let message = {
+                    sender: localStorage.getItem("userid"),
+                    receiver: new_chat_user,
+                    msgContent: `Hi, ${localStorage.getItem(
+                        "userName"
+                    )} wants to have a chat with you.`,
+                };
+                const result = await axios.post(
+                    `${backendURI}/chat/sendmessage`,
+                    message
+                );
+                if (result) {
+                    await getAllChats();
+                }
+            } else {
+                swal("", "Please select a user from the list", "error");
+            }
+        }
+    };
 
     const handleClickOutside = (e) => {
         const { current: wrap } = wrapperRef;
@@ -103,7 +152,7 @@ export default function ChatList({ allChats, handleClick }) {
                         </div>
                     )}
                 </div>
-                <button className="btn-nobg">
+                <button className="btn-nobg" onClick={addNewChat}>
                     <i className="fa fa-plus"></i>
                 </button>
             </div>

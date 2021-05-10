@@ -20,6 +20,12 @@
     margin: 0;
     font-weight: 600;
 }
+.chat_item_message_user {
+    border-bottom: 1px solid #aaa;
+    padding-bottom: 5px;
+    color: #777;
+    font-size: 12px;
+}
 .content__header {
     display: flex;
     justify-content: space-between;

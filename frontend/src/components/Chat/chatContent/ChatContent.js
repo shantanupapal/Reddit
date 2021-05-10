@@ -79,17 +79,7 @@ export default class ChatContent extends Component {
                 </div>
             );
         }
-        // let user = this.state.current_chat.user1 ? this.state.current_chat.user1 : this.state.current_chat.user2;
-        // let messages = this.state.current_chat.message.map((text) => {
-        //     return (
-        //         <div className="col-sm-12 messages">
-        //             <h6 className="col-sm-12">
-        //                 {text.sender.first_name} : {text.message_content}
-        //             </h6>
-        //         </div>
-        //     );
-        // });
-        // const { chat } = this.props;
+
         return (
             <div className="main__chatcontent">
                 <div className="content__header">
@@ -97,9 +87,7 @@ export default class ChatContent extends Component {
                         <div className="current-chatting-user">
                             <Avatar image={chat1} />
                             <div style={{ display: "block" }}>
-                                {this.state.current_chat.user1
-                                    ? this.state.current_chat.user1.userName
-                                    : this.state.current_chat.user2.userName}
+                                {this.props.username}
                             </div>
                             <br />
                         </div>
@@ -110,10 +98,8 @@ export default class ChatContent extends Component {
                     </div>
                 </div>
                 <div className="content__body">
-                    {/* localStorage.getItem("user_id")*/}
                     <div className="chat__items">
                         {this.state.current_chat.message.map((itm, index) => {
-                            // console.log(itm.type);
                             return (
                                 <ChatItem
                                     animationDelay={index + 2}
@@ -121,7 +107,7 @@ export default class ChatContent extends Component {
                                     user={"other"}
                                     msg={itm.msgContent}
                                     image={itm.image}
-                                    // name={itm.}
+                                    name={itm.sender.userName}
                                 />
                             );
                         })}
