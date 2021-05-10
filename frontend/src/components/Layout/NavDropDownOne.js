@@ -30,6 +30,16 @@ class NavDropDownOne extends Component {
 							<PeopleIcon /> My Communities
 						</Link>
 					</Dropdown.Item>
+
+					<Dropdown.Item>
+						<Link
+							to="/Moderation"
+							className="nav-link"
+							style={{ color: "black" }}
+						>
+							<PeopleIcon /> My Communities Moderation
+						</Link>
+					</Dropdown.Item>
 					<Dropdown.Item>
 						<Link to="/" className="nav-link" style={{ color: "black" }}>
 							<MessageIcon /> Messages
