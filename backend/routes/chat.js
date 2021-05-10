@@ -85,4 +85,19 @@ router.get("/getchat/:user_id/:chat_id", async (req, res) => {
     });
 });
 
+router.get("/getallusers", async (req, res) => {
+    let message = {};
+    message.kafka_service = "get_all_users";
+    // message.user_id = req.params.user_id;
+    // message.chat_id = req.params.chat_id;
+
+    kafka.make_request("chat", message, function (err, results) {
+        if (err) {
+            res.status(err.status).send(err.data);
+        } else {
+            res.status(results.status).send(results.data);
+        }
+    });
+});
+
 module.exports = router;

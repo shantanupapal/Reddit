@@ -2,6 +2,7 @@
 const { sendMessage } = require("./sendMessage");
 const { getChat } = require("./getChat");
 const { getAllChats } = require("./getAllChats");
+const { getAllUsers } = require("./getAllUsers");
 
 let handle_request = (msg, callback) => {
     if (msg.kafka_service === "send_message") {
@@ -10,6 +11,8 @@ let handle_request = (msg, callback) => {
         getAllChats(msg, callback);
     } else if (msg.kafka_service === "get_user_chat") {
         getChat(msg, callback);
+    } else if (msg.kafka_service === "get_all_users") {
+        getAllUsers(msg, callback);
     }
 };
 
