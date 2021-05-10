@@ -11,6 +11,7 @@ const createCommunityService = require("./services/createCommunity");
 const moderationService = require("./services/moderation");
 
 const chatService = require("./services/chat");
+const invitationService = require("./services/invitation");
 
 //MongoDB connection
 connectMongoDB();
@@ -60,3 +61,4 @@ handleTopicRequest("mycommunity", myCommunityService);
 handleTopicRequest("createCommunity", createCommunityService);
 handleTopicRequest("moderation", moderationService);
 handleTopicRequest("chat", chatService);
+handleTopicRequest("invitation", invitationService);

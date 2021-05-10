@@ -9,6 +9,7 @@ import CommunityHome from "./Communities/CommunityHome";
 import ChangePassword from "./Profile/ChangePassword";
 import Moderation from "./Communities/Moderation/Moderation";
 import Chat from "./Chat/Chat";
+import Invitation from "./Invitation";
 
 const Main = () => {
     return (
@@ -26,6 +27,7 @@ const Main = () => {
             <Route exact path="/ChangePassword" component={ChangePassword} />
             <Route exact path="/Moderation" component={Moderation} />
             <Route exact path="/Chat" component={Chat} />
+            <Route exact path="/Invitation" component={Invitation} />
         </div>
     );
 };

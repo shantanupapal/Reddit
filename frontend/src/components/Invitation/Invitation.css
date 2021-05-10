@@ -1,0 +1,78 @@
+.inv-container {
+    margin-top: 20px;
+}
+.inv-member-container {
+    border-top: 1px solid black;
+    border-radius: 20px;
+}
+
+.inv-row {
+    border-bottom: 1px solid black;
+    padding: 20px;
+    border-radius: 20px;
+    /* background: #eee; */
+    margin-bottom: 20px;
+}
+
+.inv-plus {
+    font-size: 50px;
+    padding-top: 25px;
+    color: #aaa;
+}
+
+.inv-span-tag {
+    font-size: 13px;
+}
+
+.inv-invite {
+    font-size: 50px;
+    font-weight: bold;
+}
+
+.inv-btn {
+}
+
+.inv-members {
+    border: 1px solid #eee;
+    padding: 10px;
+    margin: 15px;
+    border-radius: 20px;
+    background: #eee;
+}
+.inv-all-members {
+    /* border-left: 2px solid #aaa; */
+    /* padding-left: 50px; */
+    /* margin-left: 10px; */
+}
+
+.inv-member-container {
+    /* border-bottom: 1px solid #aaa; */
+    /* border-radius: 20px; */
+    /* text-decoration: underline; */
+}
+
+.inv-comname {
+    float: right;
+    font-size: 50px;
+}
+
+.inv-status {
+    font-size: 15px;
+    font-weight: bold;
+    border-left: 1px solid #aaa;
+    padding-left: 10px;
+}
+
+.inv-prev {
+    font-size: 30px;
+    padding-left: 20px;
+}
+
+.inv-tags {
+    font-size: 20px;
+    text-decoration: dotted underline;
+}
+
+.inv-tag-container {
+    margin-top: 10px;
+}
