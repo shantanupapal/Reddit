@@ -8,6 +8,7 @@ const profile = require("./routes/profile");
 const mycommunity = require("./routes/mycommunity");
 const community = require("./routes/createcommunity");
 const moderation = require("./routes/moderation");
+const chat = require("./routes/chat");
 
 app.use("/api/login", login);
 app.use("/api/signup", signup);
@@ -15,11 +16,12 @@ app.use("/api/profile", profile);
 app.use("/api/createcommunity", community);
 app.use("/api/mycommunity", mycommunity);
 app.use("/api/moderation", moderation);
+app.use("/chat", chat);
 
 const port = process.env.PORT || 3001;
 
 app.listen(port, () => {
-	console.log(`Server listening on port ${port}`);
+    console.log(`Server listening on port ${port}`);
 });
 
 module.exports = app;

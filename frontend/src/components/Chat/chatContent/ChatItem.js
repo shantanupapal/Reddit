@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import Avatar from "../chatList/Avatar";
-
+import chat1 from "../../../images/chat1.png";
 export default class ChatItem extends Component {
     render() {
         return (
@@ -17,7 +17,7 @@ export default class ChatItem extends Component {
                         <span>7.10PM</span>
                     </div>
                 </div>
-                <Avatar image={this.props.image} />
+                <Avatar image={chat1} />
             </div>
         );
     }

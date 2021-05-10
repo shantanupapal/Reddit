@@ -1,40 +1,23 @@
 import React, { Component } from "react";
 import Avatar from "./Avatar";
-
+import chat2 from "../../../images/chat2.png";
 export default class ChatListItems extends Component {
     constructor(props) {
         super(props);
     }
-    selectChat = (e) => {
-        for (
-            let index = 0;
-            index < e.currentTarget.parentNode.children.length;
-            index++
-        ) {
-            e.currentTarget.parentNode.children[index].classList.remove(
-                "active"
-            );
-        }
-        e.currentTarget.classList.add("active");
-        console.log("current", e.currentTarget.classList);
-    };
 
     render() {
         return (
             <div
                 style={{ animationDelay: `0.${this.props.animationDelay}s` }}
-                onClick={this.selectChat}
+                onClick={() => {
+                    this.props.handleClick(this.props.chat);
+                }}
                 className={`chatlist__item ${
                     this.props.active ? this.props.active : ""
                 } `}
             >
-                <Avatar
-                    image={
-                        this.props.image
-                            ? this.props.image
-                            : "http://placehold.it/80x80"
-                    }
-                />
+                <Avatar image={chat2} />
 
                 <div className="userMeta">
                     <p>{this.props.name}</p>

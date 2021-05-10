@@ -8,45 +8,46 @@ const photo = chat1;
 const photo2 = chat2;
 
 export default class ChatList extends Component {
-    allChatUsers = [
-        {
-            image: photo,
-            id: 1,
-            name: "Shantanu Papal",
-        },
-        {
-            image: photo2,
-            id: 2,
-            name: "Anish",
-        },
-        {
-            image: photo2,
-            id: 3,
-            name: "Sumeet",
-        },
-        {
-            image: photo,
-            id: 4,
-            name: "Payal G",
-        },
-        {
-            image: photo2,
-            id: 5,
-            name: "Paras",
-        },
-        {
-            image: photo,
-            id: 6,
-            name: "Devika",
-        },
-    ];
-    constructor(props) {
-        super(props);
-        this.state = {
-            allChats: this.allChatUsers,
-        };
-    }
+    // allChatUsers = [
+    //     {
+    //         image: photo,
+    //         id: 1,
+    //         name: "Shantanu Papal",
+    //     },
+    //     {
+    //         image: photo2,
+    //         id: 2,
+    //         name: "Anish",
+    //     },
+    //     {
+    //         image: photo2,
+    //         id: 3,
+    //         name: "Sumeet",
+    //     },
+    //     {
+    //         image: photo,
+    //         id: 4,
+    //         name: "Payal G",
+    //     },
+    //     {
+    //         image: photo2,
+    //         id: 5,
+    //         name: "Paras",
+    //     },
+    //     {
+    //         image: photo,
+    //         id: 6,
+    //         name: "Devika",
+    //     },
+    // ];
+    // constructor(props) {
+    //     super(props);
+    //     this.state = {
+    //         allChats: this.allChatUsers,
+    //     };
+    // }
     render() {
+        const { allChats } = this.props;
         return (
             <div className="main__chatlist">
                 <div className="chatlist__heading">
@@ -55,22 +56,30 @@ export default class ChatList extends Component {
                         <i className="fa fa-plus"></i>
                     </button>
                 </div>
-                {/*<div className="chatList__search">
+                <div className="chatList__search">
                     <div className="search_wrap">
                         <input type="text" placeholder="Search Here" required />
                         <button className="search-btn">
                             <i className="fa fa-search"></i>
                         </button>
                     </div>
-        </div>*/}
+                </div>
                 <div className="chatlist__items">
-                    {this.state.allChats.map((item, index) => {
+                    {allChats.map((chat, index) => {
+                        let name = "";
+                        if (chat.user1) {
+                            name = chat.user1.userName;
+                        } else if (chat.user2) {
+                            name = chat.user2.userName;
+                        }
                         return (
                             <ChatListItems
-                                name={item.name}
-                                key={item.id}
+                                handleClick={this.props.handleClick}
+                                name={name}
+                                key={chat._id}
                                 animationDelay={index + 1}
-                                image={item.image}
+                                image={chat.image}
+                                chat={chat}
                             />
                         );
                     })}

@@ -3,6 +3,7 @@
     padding: 20px 40px;
     /* max-width: 63%; */
     border-right: 1px solid #ebe7fb;
+    font-size: "12px";
 }
 .content__header {
     padding-bottom: 15px;
@@ -11,6 +12,9 @@
 .current-chatting-user {
     display: flex;
     align-items: center;
+}
+.current-chatting-user-quote {
+    font-size: 12px;
 }
 .current-chatting-user p {
     margin: 0;

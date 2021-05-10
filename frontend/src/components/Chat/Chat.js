@@ -8,6 +8,7 @@ function Chat() {
     return (
         <>
             <NavbarMain />
+
             <div className="__main">
                 <ChatBody />
             </div>

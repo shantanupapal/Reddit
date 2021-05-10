@@ -1,93 +1,127 @@
 import React, { Component } from "react";
-
 import "./chatContent.css";
 import Avatar from "../chatList/Avatar";
 import ChatItem from "./ChatItem";
 import chat1 from "../../../images/chat1.png";
-import chat2 from "../../../images/chat2.png";
+
+import { backendURI } from "../../../utils/config";
+import axios from "axios";
 
 export default class ChatContent extends Component {
-    chatItms = [
-        {
-            key: 1,
-            image: chat2,
-            type: "",
-            msg: "Hi, How are you?",
-        },
-        {
-            key: 2,
-            image: chat1,
-            type: "other",
-            msg: "I am fine.",
-        },
-        {
-            key: 3,
-            image: chat1,
-            type: "other",
-            msg: "What about you?",
-        },
-        {
-            key: 4,
-            image: chat2,
-            type: "",
-            msg: "Awesome",
-        },
-        {
-            key: 5,
-            image: chat2,
-            type: "",
-            msg: "Let's Meet",
-        },
-        {
-            key: 3,
-            image: chat1,
-            type: "other",
-            msg: "Sure!",
-        },
-    ];
-
+    timeout;
     constructor(props) {
         super(props);
-        this.state = {
-            chat: this.chatItms,
-            msg: "",
-        };
+        this.state = {};
     }
 
-    componentDidMount() {}
-    onStateChange = (e) => {
-        this.setState({ msg: e.target.value });
+    componentWillMount() {
+        this.getMsg();
+        this.timeout = setInterval(this.getMsg, 3000);
+    }
+    componentWillReceiveProps(props) {
+        this.props = props;
+        this.getMsg();
+    }
+
+    componentWillUnmount() {
+        clearInterval(this.timeout);
+    }
+
+    getMsg = async () => {
+        console.log(this.props.user_id);
+        let { data: current_chat } = await axios.get(
+            `${backendURI}/chat/getchat/${this.props.user_id}/${this.props.chat._id}`
+        );
+        await this.setState({ current_chat });
+    };
+
+    sendMsg = async (e) => {
+        if (this.state && this.state.new_message) {
+            let data = {
+                sender: this.props.user_id,
+                receiver:
+                    this.state && this.state.current_chat.user1
+                        ? this.state.current_chat.user1._id
+                        : this.state.current_chat.user2._id,
+                chat_id: this.props.chat._id,
+                msgContent: this.state.new_message,
+            };
+            this.setState({
+                new_message: "",
+            });
+            let response = await axios.post(
+                `${backendURI}/chat/sendmessage`,
+                data
+            );
+            if (response) {
+                this.getMsg();
+            }
+        }
+    };
+
+    onNewMessage = (e) => {
+        let new_message = this.state.new_message;
+        new_message = e.target.value;
+        this.setState({ new_message: new_message });
     };
 
     render() {
+        if (!this.state.current_chat) {
+            return (
+                <div className="messagepane-card">
+                    <div className="error">
+                        You don’t have a message selected
+                    </div>
+                    <div className="error2">
+                        Choose one from your existing messages, or start a new
+                        one.
+                    </div>
+                </div>
+            );
+        }
+        // let user = this.state.current_chat.user1 ? this.state.current_chat.user1 : this.state.current_chat.user2;
+        // let messages = this.state.current_chat.message.map((text) => {
+        //     return (
+        //         <div className="col-sm-12 messages">
+        //             <h6 className="col-sm-12">
+        //                 {text.sender.first_name} : {text.message_content}
+        //             </h6>
+        //         </div>
+        //     );
+        // });
+        // const { chat } = this.props;
         return (
             <div className="main__chatcontent">
                 <div className="content__header">
                     <div className="blocks">
                         <div className="current-chatting-user">
                             <Avatar image={chat1} />
-                            <p>Shantanu Papal</p>
+                            <div style={{ display: "block" }}>
+                                {this.state.current_chat.user1
+                                    ? this.state.current_chat.user1.userName
+                                    : this.state.current_chat.user2.userName}
+                            </div>
+                            <br />
+                        </div>
+                        <div className="current-chatting-user-quote">
+                            This is the start of a beautiful thing. Say
+                            something nice, or share a cat fact.
                         </div>
                     </div>
-
-                    {/*<div className="blocks">
-                      <div className="settings">
-                          <button className="btn-nobg">
-                              <i className="fa fa-cog"></i>
-                          </button>
-                      </div>
-        </div>*/}
                 </div>
                 <div className="content__body">
+                    {/* localStorage.getItem("user_id")*/}
                     <div className="chat__items">
-                        {this.state.chat.map((itm, index) => {
+                        {this.state.current_chat.message.map((itm, index) => {
+                            // console.log(itm.type);
                             return (
                                 <ChatItem
                                     animationDelay={index + 2}
-                                    key={itm.key}
-                                    user={itm.type ? itm.type : "me"}
-                                    msg={itm.msg}
+                                    key={itm._id}
+                                    user={"other"}
+                                    msg={itm.msgContent}
                                     image={itm.image}
+                                    // name={itm.}
                                 />
                             );
                         })}
@@ -95,16 +129,18 @@ export default class ChatContent extends Component {
                 </div>
                 <div className="content__footer">
                     <div className="sendNewMessage">
-                        {/*<button className="addFiles">
-                          <i className="fa fa-plus"></i>
-                      </button>*/}
                         <input
                             type="text"
+                            name="new_message"
                             placeholder="Message "
-                            onChange={this.onStateChange}
-                            value={this.state.msg}
+                            onChange={this.onNewMessage}
+                            value={this.state.new_message}
                         />
-                        <button className="btnSendMsg" id="sendMsgBtn">
+                        <button
+                            className="btnSendMsg"
+                            id="sendMsgBtn"
+                            onClick={this.sendMsg}
+                        >
                             <i className="fa fa-angle-right"></i>
                         </button>
                     </div>
