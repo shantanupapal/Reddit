@@ -81,6 +81,12 @@ class SinglePost extends Component {
 							<span className="pl-2">{this.props.post.votes}</span>
 						</span>
 					</div>
+					<div className="">
+						<span className="text-xs font-extralight">
+							<b>CreatedBy</b>- {this.props.post.createdBy.userName}
+						</span>
+						<span className="text-xs font-extralight">At {this.props.post.createdAt}</span>
+					</div>
 					<div className="border-bottom pb-2">
 						<span>{this.props.post.body} </span>
 					</div>
@@ -92,6 +98,7 @@ class SinglePost extends Component {
 									<Comment
 										checkCommunityUserStatus={this.props.checkCommunityUserStatus}
 										comment={comment}
+										nestedComment={false}
 									/>
 								);
 							})}
@@ -266,9 +273,11 @@ class Comment extends Component {
 	};
 	render() {
 		console.log(this.props);
-
+		if (!this.props.comment.content) {
+			return null;
+		}
 		return (
-			<div className="py-2 border">
+			<div className="py-2">
 				<Modal show={this.state.showModal} size="lg" aria-labelledby="contained-modal-title-vcenter" centered>
 					<Modal.Header closeButton>
 						<Modal.Title id="contained-modal-title-vcenter">Reply To Comment</Modal.Title>
@@ -293,26 +302,44 @@ class Comment extends Component {
 					</Modal.Footer>
 				</Modal>
 				<li>
-					<span>{this.props.comment.content}</span>
-					<span className="float-right">
-						{this.props.checkCommunityUserStatus() ? (
-							<button className="btn btn-link" onClick={this.replyToComment}>
-								Reply
-							</button>
-						) : null}
+					{this.props.nestedComment === false ? (
+						<span>{this.props.comment.content}</span>
+					) : (
+						<span>&emsp;{this.props.comment.content}</span>
+					)}
+					{this.props.nestedComment === false ? (
+						<span className="float-right">
+							{this.props.checkCommunityUserStatus() ? (
+								<button className="btn btn-link" onClick={this.replyToComment}>
+									Reply
+								</button>
+							) : null}
 
-						<button className="btn btn-link" onClick={this.upvoteComment}>
-							Upvote
-						</button>
-						<button className="btn btn-link" onClick={this.downvoteComment}>
-							Downvote
-						</button>
-						<span className="pl-2">{this.props.comment.votes}</span>
-					</span>
+							<button className="btn btn-link" onClick={this.upvoteComment}>
+								Upvote
+							</button>
+							<button className="btn btn-link" onClick={this.downvoteComment}>
+								Downvote
+							</button>
+							<span className="pl-2">{this.props.comment.votes}</span>
+						</span>
+					) : null}
+					<div className="">
+						<span className="text-xs font-extralight">
+							<b>CreatedBy</b>- {this.props.comment.commentedBy.userName}
+						</span>
+						<span className="text-xs font-extralight">At {this.props.comment.commentedAt}</span>
+					</div>
 				</li>
 				{this.props.comment.nestedComments &&
-					this.props.comment.nestedComments.map((nestedComments) => {
-						return <li key={nestedComments.content}>{nestedComments.content}</li>;
+					this.props.comment.nestedComments.map((nestedComment) => {
+						return (
+							<Comment
+								checkCommunityUserStatus={this.props.checkCommunityUserStatus}
+								comment={nestedComment}
+								nestedComment={true}
+							/>
+						);
 					})}
 			</div>
 		);
@@ -333,7 +360,7 @@ class CommunityHome extends Component {
 			description: "Community for memes",
 			images: "https://homepages.cae.wisc.edu/~ece533/images/airplane.png",
 			rules: [{ title: "Rule 1", desc: "Rule 1" }],
-			communityMembers: [{ id: 1, userName: "PG", email: "pg@hotmail.com" }],
+			communityMembers: [{ _id: 1, userName: "PG", email: "pg@hotmail.com" }],
 			posts: [
 				{
 					title: "Post1",
@@ -345,26 +372,26 @@ class CommunityHome extends Component {
 						{
 							content: "Comment 1",
 							votes: 4,
-							commentedBy: { _id: 1, name: "PG" },
+							commentedBy: { _id: 1, userName: "PG", email: "pg@hotmail.com" },
 							commentedAt: "5/5/2021",
 							nestedComments: [
 								{
 									content: "Nested Comment 1",
 									votes: 2,
-									commentedBy: { _id: 1, name: "PG" },
+									commentedBy: { _id: 1, userName: "PG", email: "pg@hotmail.com" },
 									commentedAt: "6/5/2021",
-									nestedComments: {},
+									nestedComments: [{}],
 								},
 							],
 						},
 					],
-					createdBy: { _id: 1, name: "PG" },
+					createdBy: { _id: 1, userName: "PG", email: "pg@hotmail.com" },
 					createdAt: "6/5/2021",
 				},
 			],
 			topics: ["Memes", "Meme"],
 			votes: 5,
-			createdBy: { _id: 1, name: "PG" },
+			createdBy: { _id: 1, userName: "PG", email: "pg@hotmail.com" },
 			createdAt: "6/5/2021",
 		};
 		this.setState({
