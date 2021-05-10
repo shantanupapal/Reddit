@@ -7,6 +7,7 @@ import Profile from "./Profile/Profile";
 import CreateCommunity from "./Communities/CreateCommunity/CreateCommunity";
 import CommunityHome from "./Communities/CommunityHome";
 import ChangePassword from "./Profile/ChangePassword";
+import Moderation from "./Communities/Moderation/Moderation";
 
 const Main = () => {
 	return (
@@ -18,6 +19,7 @@ const Main = () => {
 			<Route exact path="/CreateCommunity" component={CreateCommunity} />
 			<Route exact={false} path="/community/:id" component={CommunityHome} />
 			<Route exact path="/ChangePassword" component={ChangePassword} />
+			<Route exact path="/Moderation" component={Moderation} />
 		</div>
 	);
 };
