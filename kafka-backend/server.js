@@ -9,6 +9,7 @@ const profileService = require("./services/profile");
 const myCommunityService = require("./services/myCommunity");
 const createCommunityService = require("./services/createCommunity");
 const moderationService = require("./services/moderation");
+const communityHomeService = require("./services/communityHome");
 
 const chatService = require("./services/chat");
 const invitationService = require("./services/invitation");
@@ -62,3 +63,4 @@ handleTopicRequest("createCommunity", createCommunityService);
 handleTopicRequest("moderation", moderationService);
 handleTopicRequest("chat", chatService);
 handleTopicRequest("invitation", invitationService);
+handleTopicRequest("communityHome", communityHomeService);
