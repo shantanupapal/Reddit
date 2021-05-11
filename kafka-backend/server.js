@@ -13,6 +13,7 @@ const communityHomeService = require("./services/communityHome");
 
 const chatService = require("./services/chat");
 const invitationService = require("./services/invitation");
+const communityHomeService1 = require("./services/communityHome1");
 
 //MongoDB connection
 connectMongoDB();
@@ -64,3 +65,4 @@ handleTopicRequest("moderation", moderationService);
 handleTopicRequest("chat", chatService);
 handleTopicRequest("invitation", invitationService);
 handleTopicRequest("communityHome", communityHomeService);
+handleTopicRequest("communityHome1", communityHomeService1);
