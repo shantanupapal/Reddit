@@ -10,6 +10,7 @@ const community = require("./routes/createcommunity");
 const moderation = require("./routes/moderation");
 const chat = require("./routes/chat");
 const invitation = require("./routes/invitation");
+const communityhome = require("./routes/communityHome");
 
 app.use("/api/login", login);
 app.use("/api/signup", signup);
@@ -20,10 +21,12 @@ app.use("/api/moderation", moderation);
 app.use("/chat", chat);
 app.use("/invitation", invitation);
 
+app.use("/api/communityhome", communityhome);
+
 const port = process.env.PORT || 3001;
 
 app.listen(port, () => {
-    console.log(`Server listening on port ${port}`);
+	console.log(`Server listening on port ${port}`);
 });
 
 module.exports = app;

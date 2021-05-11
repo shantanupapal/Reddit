@@ -5,6 +5,8 @@ import { NavLink } from "react-router-dom";
 import { Route, Switch } from "react-router";
 import Modal from "react-bootstrap/Modal";
 import { Button } from "react-bootstrap";
+import { backendURI } from "../../utils/config";
+import axios from "axios";
 
 class SinglePost extends Component {
 	constructor() {
@@ -353,8 +355,8 @@ class CommunityHome extends Component {
 	}
 	componentDidMount = () => {
 		this.getCommunityData();
-		let communityId = this.props.match.params.id;
-		console.log("communityId", communityId);
+		let communityName = this.props.match.params.name;
+		console.log("communityName", communityName);
 		const communityData = {
 			communityName: "Memes",
 			description: "Community for memes",
@@ -399,6 +401,14 @@ class CommunityHome extends Component {
 		});
 	};
 	getCommunityData = () => {
+		axios
+			.get(`${backendURI}/api/communityhome/getCommunity/painting`)
+			.then((response) => {
+				console.log("Actions::response from getCommunity", response.data);
+			})
+			.catch((error) => {
+				console.log(error);
+			});
 		this.setState({
 			posts: ["Sameple Post A", "Sample Post B"],
 		});
@@ -420,11 +430,14 @@ class CommunityHome extends Component {
 	joinCommunity = () => {
 		alert("Join Community");
 	};
+	leaveCommunity = () => {
+		alert("Leave Community");
+	};
 	render() {
-		let communityId = this.props.match.params.id;
-		let communityLink = "/community/" + communityId;
-		let rulesLink = "/community/" + communityId + "/rules";
-		let usersLink = "/community/" + communityId + "/users";
+		let communityName = this.props.match.params.name;
+		let communityLink = "/community/" + communityName;
+		let rulesLink = "/community/" + communityName + "/rules";
+		let usersLink = "/community/" + communityName + "/users";
 		return (
 			<div className="container-fluid">
 				<NavbarMain />
@@ -442,7 +455,7 @@ class CommunityHome extends Component {
 											Join
 										</Button>
 									) : this.checkCommunityUserStatus() === true ? (
-										<Button onClick={this.joinCommunity} variant="danger">
+										<Button onClick={this.leaveCommunity} variant="danger">
 											Leave
 										</Button>
 									) : (
@@ -501,7 +514,7 @@ class CommunityHome extends Component {
 							<Switch>
 								<Route
 									exact={true}
-									path="/community/:id"
+									path="/community/:name"
 									component={(props) => (
 										<Posts
 											checkCommunityUserStatus={this.checkCommunityUserStatus}
@@ -511,11 +524,11 @@ class CommunityHome extends Component {
 									)}
 								/>
 								<Route
-									path="/community/:id/rules"
+									path="/community/:name/rules"
 									component={(props) => <Rules rules={this.state.communityData.rules} {...props} />}
 								/>
 								<Route
-									path="/community/:id/users"
+									path="/community/:name/users"
 									component={(props) => (
 										<Users users={this.state.communityData.communityMembers} {...props} />
 									)}

@@ -5,11 +5,11 @@ const kafka = require("../kafka/client");
 const { checkAuth } = require("../utils/passport");
 const logger = require("../utils/logger");
 
-router.get("/getCommunity/:communityId", async (req, res) => {
-	console.log("Backend getCommunity ::req.params.communityId", req.params.communityId);
+router.get("/getCommunity/:communityName", async (req, res) => {
+	console.log("Backend getCommunity ::req.params.communityName", req.params.communityName);
 	let msg = {};
 	msg.route = "get_community";
-	msg.id = req.params.communityId;
+	msg.communityName = req.params.communityName;
 
 	kafka.make_request("communityHome", msg, function (err, results) {
 		if (err) {

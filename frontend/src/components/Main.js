@@ -12,24 +12,21 @@ import Chat from "./Chat/Chat";
 import Invitation from "./Invitation";
 
 const Main = () => {
-    return (
-        <div>
-            <Route exact path="/" component={Landing} />
-            <Route exact path="/Login" component={Login} />
-            <Route exact path="/Signup" component={Signup} />
-            <Route exact path="/Profile" component={Profile} />
-            <Route exact path="/CreateCommunity" component={CreateCommunity} />
-            <Route
-                exact={false}
-                path="/community/:id"
-                component={CommunityHome}
-            />
-            <Route exact path="/ChangePassword" component={ChangePassword} />
-            <Route exact path="/Moderation" component={Moderation} />
-            <Route exact path="/Chat" component={Chat} />
-            <Route exact path="/Invitation" component={Invitation} />
-        </div>
-    );
+	return (
+		<div>
+			<Route exact path="/" component={Landing} />
+			<Route exact path="/Login" component={Login} />
+			<Route exact path="/Signup" component={Signup} />
+			<Route exact path="/Profile" component={Profile} />
+			<Route exact path="/CreateCommunity" component={CreateCommunity} />
+			<Route exact path="/ChangePassword" component={ChangePassword} />
+			<Route exact={false} path="/community/:name" component={CommunityHome} />
+			<Route exact path="/ChangePassword" component={ChangePassword} />
+			<Route exact path="/Moderation" component={Moderation} />
+			<Route exact path="/Chat" component={Chat} />
+			<Route exact path="/Invitation" component={Invitation} />
+		</div>
+	);
 };
 
 export default Main;

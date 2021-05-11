@@ -7,8 +7,12 @@ let getCommunity = async (msg, callback) => {
 	let response = {};
 	let err = {};
 	try {
-		let community = await Community.find({ _id: msg.id });
-		console.log("communities data is: ", community);
+		// let communities = await Community.find().populate({
+		// 	path: "communityMembers._id",
+		// });
+		// console.log("communities data is: ", communities);
+		let community = await Community.find({ communityName: msg.communityName }).populate("communityMembers");
+		console.log("community data is: ", community);
 		if (community && community.length > 0) {
 			response.status = STATUS_CODE.SUCCESS;
 			response.data = JSON.stringify(community);
@@ -26,4 +30,4 @@ let getCommunity = async (msg, callback) => {
 	}
 };
 
-exports.getAllCommunities = getCommunity;
+exports.getCommunity = getCommunity;
