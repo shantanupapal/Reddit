@@ -9,6 +9,7 @@ const profileService = require("./services/profile");
 const myCommunityService = require("./services/myCommunity");
 const createCommunityService = require("./services/createCommunity");
 const moderationService = require("./services/moderation");
+const communityHomeService = require("./services/communityHome");
 
 //MongoDB connection
 connectMongoDB();
@@ -57,3 +58,4 @@ handleTopicRequest("profile", profileService);
 handleTopicRequest("mycommunity", myCommunityService);
 handleTopicRequest("createCommunity", createCommunityService);
 handleTopicRequest("moderation", moderationService);
+handleTopicRequest("communityHome", communityHomeService);
