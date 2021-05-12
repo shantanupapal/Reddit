@@ -3,7 +3,7 @@ const User = require("../../models/userModel");
 const Chat = require("../../models/chatModel");
 const { STATUS_CODE, MESSAGES } = require("../../utils/constants");
 const mongoose = require("mongoose");
-const redisClient = require("../../utils/redisConfig");
+// const redisClient = require("../../utils/redisConfig");
 
 let sendMessage = async (message, callback) => {
   console.log("inside kafka sendmessage");
