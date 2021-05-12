@@ -2,7 +2,7 @@
 const Chat = require("../../models/chatModel");
 const { STATUS_CODE, MESSAGES } = require("../../utils/constants");
 const mongoose = require("mongoose");
-// const redisClient = require("../../utils/redisConfig");
+const redisClient = require("../../utils/redisConfig");
 
 let getChat = async (message, callback) => {
   console.log("user_id", message.user_id);
