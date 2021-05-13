@@ -1,0 +1,33 @@
+[
+    {
+        "title": "Which adventure would you do?",
+        "votes": 39,
+        "comments": 3,
+        "name": "adventure",
+        "createdBy": "Shantanu Papal"
+    },
+    {
+        "title": "Favorite vacation destination?",
+        "image_src": "assets/images/post-2.jpg",
+        "votes": 4,
+        "comments": 8,
+        "name": "hampi",
+        "createdBy": "Anish"
+    },
+    {
+        "title": "Ha ha ha",
+        "image_src": "assets/images/post-1.jpg",
+        "votes": 100,
+        "comments": 12,
+        "name": "Meme",
+        "createdBy": "Payal"
+    },
+    {
+        "title": "Snacks",
+        "body": "What is your favorite snack?",
+        "votes": 3,
+        "comments": 1,
+        "name": "Food",
+        "createdBy": "Paras"
+    }
+]
