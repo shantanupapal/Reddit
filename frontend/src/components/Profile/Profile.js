@@ -1,10 +1,12 @@
+"use strict";
 import React, { Component } from "react";
 import NavbarMain from "../Layout/NavbarMain";
-import profilepic from "../../images/reddit-profile.png";
+import axios from "axios";
 import { Multiselect } from "multiselect-react-dropdown";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { getUser, updateUser } from "../../redux/actions/userProfileActions";
+import { backendURI } from "../../utils/config";
 import "./profile.css";
 class Profile extends Component {
 	constructor(props) {
@@ -91,7 +93,47 @@ class Profile extends Component {
 			console.log("userData is : ", userData);
 		}
 	}
+
+	onUpload = (e) => {
+		console.log("inside upload");
+		e.preventDefault();
+
+		const formData = new FormData();
+
+		formData.append("image", this.state.file);
+		const uploadConfig = {
+			headers: {
+				"content-type": "multipart/form-data",
+			},
+		};
+		console.log("formData", formData);
+		axios
+			.post(
+				`${backendURI}/api/uploads/${this.state.userId}`,
+				formData,
+				uploadConfig
+			)
+			.then((response) => {
+				alert("Image uploaded successfully!");
+				this.setState({
+					fileText: "Choose file",
+					userImage: response.data,
+				});
+
+				const user = { userid: localStorage.getItem("userid") };
+				this.props.getUser(user);
+			})
+			.catch((err) => {
+				console.log("Error" + err);
+			});
+	};
+
 	render() {
+		var imageSrc;
+		console.log("image", this.state.userImage);
+		if (this.state) {
+			imageSrc = `${backendURI}/api/images/${this.state.userImage}`;
+		}
 		return (
 			<div className="container-fluid">
 				<NavbarMain />
@@ -99,7 +141,7 @@ class Profile extends Component {
 					<div className="row">
 						<div className="col-4">
 							<img
-								src={profilepic}
+								src={imageSrc}
 								alt="profilepic"
 								style={{
 									height: "300px",
@@ -108,7 +150,7 @@ class Profile extends Component {
 								}}
 							/>
 							<div>
-								<form>
+								<form onSubmit={this.onUpload}>
 									<div class="form-group">
 										<label htmlFor="image">Change your avatar: </label>
 										<input

@@ -16,7 +16,7 @@
     padding-left: 0;
 }
 
-.btn {
+/* .btn {
     background-color: #fff;
     border: none;
     outline: none;
@@ -30,11 +30,13 @@
     padding: 0;
     transition: all 0.3s ease-in-out;
 }
+
 .btn:hover {
     background-color: #4664ff;
     color: #fff;
     transform: scale(1.02);
 }
+
 .btn i {
     flex: 0.2;
     display: flex;
@@ -44,12 +46,13 @@
     font-size: 18px;
     border-right: 1px solid #ebe7fb;
 }
+
 .btn span {
     flex: 0.8;
     display: flex;
     justify-content: center;
     align-items: center;
-}
+} */
 
 /* width */
 ::-webkit-scrollbar {

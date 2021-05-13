@@ -10,7 +10,7 @@ let updateDesc = async (msg, callback) => {
     Community.updateOne(
       { _id: mongoose.Types.ObjectId(msg.community_id) },
       {
-        $set: { description: msg.description },
+        $set: { description: msg.desc },
       },
       (err, result) => {
         if (err) {

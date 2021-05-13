@@ -61,7 +61,7 @@ router.post("/deleteCommunity", checkAuth, async (req, res) => {
 
 router.get("/getCommunityDetails", checkAuth, async (req, res) => {
   let msg = {};
-  msg = req.body;
+  msg = req.query;
   msg.route = "getCommunityDetails";
 
   kafka.make_request("mycommunity", msg, function (err, results) {
