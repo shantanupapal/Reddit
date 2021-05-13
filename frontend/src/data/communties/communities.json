@@ -1,0 +1,18 @@
+[
+    {
+        "image_src": "assets/images/subreddit.jpg",
+        "name": "hampi"
+    },
+    {
+        "image_src": "assets/images/subreddit.jpg",
+        "name": "politics"
+    },
+    {
+        "image_src": "assets/images/subreddit.jpg",
+        "name": "sports"
+    },
+    {
+        "image_src": "assets/images/subreddit.jpg",
+        "name": "animals"
+    }
+]
