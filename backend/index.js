@@ -10,7 +10,8 @@ const community = require("./routes/createcommunity");
 const moderation = require("./routes/moderation");
 const chat = require("./routes/chat");
 const invitation = require("./routes/invitation");
-
+const searchcommunity = require("./routes/searchCommunity");
+const comImageUpload = require("./routes/comUpload");
 const communityhome = require("./routes/communityHome");
 const communityhome1 = require("./routes/communityHome1");
 const imageUpload = require("./routes/uploads");
@@ -28,7 +29,8 @@ app.use("/invitation", invitation);
 app.use("/api/communityhome1", communityhome1);
 app.use("/api/uploads", imageUpload);
 app.use("/api/images", getImage);
-
+app.use("/api/comUpload/", comImageUpload);
+app.use("/api/search", searchcommunity);
 app.use("/api/communityhome", communityhome);
 app.use("/api/viewprofile", viewprofile);
 

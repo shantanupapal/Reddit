@@ -3,12 +3,14 @@ import authReducer from "./authReducer";
 import userProfileReducer from "./userProfileReducer";
 import moderationReducer from "./moderationReducer";
 import myCommunityReducer from "./myCommunityReducer";
+import searchCommunityReducer from "./searchcommunityReducer";
 
 const appReducer = combineReducers({
   authuser: authReducer,
   userProfile: userProfileReducer,
   moderation: moderationReducer,
   myCommunity: myCommunityReducer,
+  searchCommunity: searchCommunityReducer,
 });
 
 const rootReducer = (state, action) => {

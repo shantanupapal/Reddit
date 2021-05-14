@@ -15,6 +15,7 @@ import ViewCommunity from "./MyCommunities/MyCommunityProfile";
 import Dashboard from "./Dashboard";
 import MyCommunityAnalytics from "./MyCommunities/MyCommunityAnalytics";
 import ViewProfile from "./ViewProfile/ViewProfile";
+import AllCommunities from "./Communities/AllCommunities/AllCommunities";
 
 const Main = () => {
   return (
@@ -39,6 +40,7 @@ const Main = () => {
         path="/MyCommunityAnalytics"
         component={MyCommunityAnalytics}
       />
+      <Route exact path="/AllCommunities" component={AllCommunities} />
     </div>
   );
 };

@@ -20,7 +20,7 @@ let getCommunityDetails = async (msg, callback) => {
           communityName: communityDetails[i].communityName,
           description: communityDetails[i].description,
           totalPost: communityDetails[i].posts.length,
-          joinedUsers: communityDetails[i].communityMembers.length,
+          joinedUsers: communityDetails[i].communityMembers,
           rules: communityDetails[i].rules,
           createdAt: communityDetails[i].createdAt,
         };
