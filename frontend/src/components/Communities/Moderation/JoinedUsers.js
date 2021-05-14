@@ -8,7 +8,7 @@ import { backendURI } from "../../../utils/config";
 import { getAllCommunities } from "../../../redux/actions/moderationActions";
 import "./showusers.css";
 
-class ShowUsers extends Component {
+class JoinedUsers extends Component {
 	state = {
 		showPopUp: false,
 		userList: [],
@@ -23,8 +23,8 @@ class ShowUsers extends Component {
 		this.setState({ showPopUp: true });
 	};
 
-	getRequestedUsers = (members) => {
-		return members.filter((value) => value.acceptStatus === 0);
+	getJoinedUsers = (members) => {
+		return members.filter((value) => value.acceptStatus === 1);
 	};
 
 	getImage = (img) => {
@@ -48,18 +48,18 @@ class ShowUsers extends Component {
 			axios.defaults.headers.common["authorization"] =
 				localStorage.getItem("token");
 			axios
-				.post(`${backendURI}/api/moderation/acceptuserrequest`, data)
+				.post(`${backendURI}/api/moderation/removeUsers`, data)
 				.then((response) => {
-					console.log("response after post acceptuserrequest", response);
+					console.log("response after post removeUsers", response);
 					if (response.status === 200) {
-						swal("Users added to the community sucecssfully!", {
+						swal("Users removed from community sucecssfully!", {
 							icon: "success",
 						});
 						this.props.getAllCommunities(user);
 					}
 				})
 				.catch((error) => {
-					swal("Failed to add users to community", "error");
+					swal("Failed to remove users to community", "error");
 					console.log("error:", error);
 				});
 		} else {
@@ -69,13 +69,11 @@ class ShowUsers extends Component {
 	};
 
 	render() {
-		let members = this.getRequestedUsers(this.props.community.communityMembers);
+		let members = this.getJoinedUsers(this.props.community.communityMembers);
 		return (
 			<div>
 				<div>
-					<button onClick={this.handleShow}>
-						{this.props.community.communityName}
-					</button>
+					<button onClick={this.handleShow}>Joined Users </button>
 				</div>
 
 				<Modal
@@ -86,7 +84,7 @@ class ShowUsers extends Component {
 				>
 					<div>
 						<Modal.Header closeButton className="modal-header modal-head">
-							<Modal.Title className="text-center">User Requests</Modal.Title>
+							<Modal.Title className="text-center">Joined Users</Modal.Title>
 						</Modal.Header>
 						<Modal.Body>
 							<div className="container">
@@ -131,7 +129,7 @@ class ShowUsers extends Component {
 											<h5 className="text-danger">No User requests</h5>
 										)}
 
-										<div className="row input-group mt-5">
+										<div className="row mt-5">
 											<button
 												type="submit"
 												onClick={this.handleClose}
@@ -142,10 +140,10 @@ class ShowUsers extends Component {
 											</button>
 											<button
 												type="submit"
-												className="btn btn-primary float-right"
+												className="btn btn-danger"
 												style={{ marginLeft: "100px" }}
 											>
-												Accept Request
+												Remove User
 											</button>
 										</div>
 									</form>
@@ -159,4 +157,4 @@ class ShowUsers extends Component {
 	}
 }
 
-export default connect(null, { getAllCommunities })(ShowUsers);
+export default connect(null, { getAllCommunities })(JoinedUsers);
