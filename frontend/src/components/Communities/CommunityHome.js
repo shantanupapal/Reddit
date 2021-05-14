@@ -13,7 +13,8 @@ class SinglePost extends Component {
 		super();
 		this.state = { comment: "", showReplyToPostModal: false };
 	}
-	downvotePost = () => {
+	downvotePost = (e) => {
+		e.preventDefault();
 		let communityName = this.props.match.params.name;
 		let communityId = localStorage.getItem("communityid");
 		let user_id = localStorage.getItem("userid");
@@ -36,7 +37,8 @@ class SinglePost extends Component {
 				console.log(error);
 			});
 	};
-	upvotePost = () => {
+	upvotePost = (e) => {
+		e.preventDefault();
 		let communityName = this.props.match.params.name;
 		let communityId = localStorage.getItem("communityid");
 		let user_id = localStorage.getItem("userid");
@@ -84,7 +86,6 @@ class SinglePost extends Component {
 			.then((response) => {
 				// this.props.history.push("/community/" + communityName);
 				this.props.getCommunityData();
-				// window.reload();
 				console.log("Actions::response from add comment on post", response.data);
 			})
 			.catch((error) => {
@@ -155,6 +156,11 @@ class SinglePost extends Component {
 					</div>
 					<div className="border-bottom pb-2">
 						<span>{this.props.post.body} </span>
+						<span>
+							<a href={this.props.post.link} target="_blank">
+								{this.props.post.link}
+							</a>
+						</span>
 					</div>
 					<div className="border-bottom pb-2">{postImage && <img src={postImage} alt="Imageinpost" />}</div>
 
@@ -183,9 +189,41 @@ class SinglePost extends Component {
 class Posts extends Component {
 	constructor() {
 		super();
-		this.state = { postTitle: null, postBody: null, postLink: null, postImage: null };
+		this.state = { postTitle: "", postBody: "", postLink: "", postImage: null };
 	}
-	createPost = () => {
+	validURL = (str) => {
+		var pattern = new RegExp(
+			"^(https?:\\/\\/)?" + // protocol
+				"((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|" + // domain name
+				"((\\d{1,3}\\.){3}\\d{1,3}))" + // OR ip (v4) address
+				"(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*" + // port and path
+				"(\\?[;&a-z\\d%_.~+=-]*)?" + // query string
+				"(\\#[-a-z\\d_]*)?$",
+			"i"
+		); // fragment locator
+		return !!pattern.test(str);
+	};
+	validatePost = () => {
+		let formIsValid = true;
+		if (this.state.postTitle.trim() === "" || this.state.postBody.trim() === "") {
+			formIsValid = false;
+			alert("Please fill all fields");
+		}
+		let isLinkValid = true;
+		if (this.state.postLink.length > 0) {
+			isLinkValid = this.validURL(this.state.postLink);
+			if (!isLinkValid) {
+				alert("Put proper link");
+				return false;
+			}
+		}
+		return formIsValid;
+	};
+	createPost = (e) => {
+		e.preventDefault();
+		if (!this.validatePost()) {
+			return;
+		}
 		let communityName = this.props.match.params.name;
 		let communityId = localStorage.getItem("communityid");
 		let user_id = localStorage.getItem("userid");
@@ -363,7 +401,8 @@ class Comment extends Component {
 		super();
 		this.state = { showModal: false, comment: "" };
 	}
-	upvoteComment = () => {
+	upvoteComment = (e) => {
+		e.preventDefault();
 		let communityName = this.props.match.params.name;
 		let communityId = localStorage.getItem("communityid");
 		let user_id = localStorage.getItem("userid");
@@ -386,7 +425,8 @@ class Comment extends Component {
 				console.log(error);
 			});
 	};
-	downvoteComment = () => {
+	downvoteComment = (e) => {
+		e.preventDefault();
 		let communityName = this.props.match.params.name;
 		let communityId = localStorage.getItem("communityid");
 		let user_id = localStorage.getItem("userid");
@@ -418,7 +458,8 @@ class Comment extends Component {
 	changeComment = (e) => {
 		this.setState({ comment: e.target.value });
 	};
-	submitComment = () => {
+	submitComment = (e) => {
+		e.preventDefault();
 		let communityName = this.props.match.params.name;
 		let communityId = localStorage.getItem("communityid");
 		let user_id = localStorage.getItem("userid");
@@ -525,7 +566,10 @@ class CommunityHome extends Component {
 	componentDidMount = () => {
 		this.getCommunityData();
 	};
-	getCommunityData = () => {
+	getCommunityData = (e) => {
+		if (e !== undefined) {
+			e.preventDefault();
+		}
 		let communityName = this.props.match.params.name;
 		axios
 			.get(`${backendURI}/api/communityhome/getCommunity/${communityName}`)
@@ -554,7 +598,8 @@ class CommunityHome extends Component {
 		return acceptStatus;
 	};
 
-	joinCommunity = () => {
+	joinCommunity = (e) => {
+		e.preventDefault();
 		let communityName = this.props.match.params.name;
 		let communityId = localStorage.getItem("communityid");
 		let user_id = localStorage.getItem("userid");
