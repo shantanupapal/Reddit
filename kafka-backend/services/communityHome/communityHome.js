@@ -18,6 +18,7 @@ let getCommunity = async (msg, callback) => {
 			.populate({ path: "communityMembers._id" })
 			.populate({ path: "createdBy" })
 			.populate({ path: "posts", populate: { path: "comments", populate: { path: "nestedComments" } } })
+			.populate({ path: "posts", populate: { path: "comments", populate: { path: "commentedBy" } } })
 			.populate({ path: "posts", populate: { path: "createdBy" } });
 
 		console.log("community data is: ", community);
