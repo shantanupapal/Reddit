@@ -327,7 +327,10 @@ export class Posts extends Component {
 			const allposts = this.state.posts;
 			for (let index = 0; index < allposts.length; index++) {
 				const post_id = allposts[index]._id;
-				const linktopost = "/Post/" + post_id;
+				let postImage = null;
+				if (allposts[index].image) {
+					postImage = backendURI + "/images/" + allposts[index].image;
+				}
 				posts.push(
 					<div className="post">
 						<div className="post-sidebar">
@@ -347,7 +350,7 @@ export class Posts extends Component {
 						<div className="post-body">
 							<span className="title">{allposts[index].title}</span>
 
-							{allposts[index].image && <img src={allposts[index].image} alt="Imageinpost" />}
+							{postImage && <img src={postImage} alt="Imageinpost" />}
 							{allposts[index].body && <span className="description">{allposts[index].body}</span>}
 						</div>
 						<div>

@@ -33,6 +33,8 @@ class CreateCommunity extends Component {
 
 		console.log("community Data", communityData);
 		axios.defaults.withCredentials = true;
+		axios.defaults.headers.common["authorization"] =
+			localStorage.getItem("token");
 		axios
 			.post(`${backendURI}/api/createcommunity`, communityData)
 			.then((response) => {
