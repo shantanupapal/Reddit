@@ -199,9 +199,7 @@ class AllCommunities extends Component {
 	};
 
 	getRequestedUsers = (members) => {
-		return members.length > 0
-			? members.filter((value) => value.acceptStatus === 0).length
-			: 0;
+		return members.length > 0 ? members.filter((value) => value.acceptStatus === 0).length : 0;
 	};
 
 	incrementVote = (upvote, cId) => {
@@ -255,10 +253,7 @@ class AllCommunities extends Component {
 		console.log("communityList", communityList);
 
 		let searchList = communityList.filter((community) => {
-			return (
-				community.communityName.toLowerCase().indexOf(search.toLowerCase()) !==
-				-1
-			);
+			return community.communityName.toLowerCase().indexOf(search.toLowerCase()) !== -1;
 		});
 
 		const currentPage = this.state.currentPage;
@@ -311,12 +306,7 @@ class AllCommunities extends Component {
 							<label htmlFor="searchbar">
 								<SearchIcon />
 							</label>
-							<input
-								id="search"
-								placeholder="Search"
-								type="search"
-								onChange={this.onSearch}
-							/>
+							<input id="search" placeholder="Search" type="search" onChange={this.onSearch} />
 						</div>
 						<div className="main-bar">
 							<div className="filter-container">
@@ -365,16 +355,12 @@ class AllCommunities extends Component {
 										<div className="post-sidebar">
 											<ArrowUpwardIcon
 												className="upvote"
-												onClick={() =>
-													this.incrementVote(value.votes, value._id)
-												}
+												onClick={() => this.incrementVote(value.votes, value._id)}
 											/>
 											<span>{value.votes}</span>
 											<ArrowDownwardIcon
 												className="downvote"
-												onClick={() =>
-													this.decrementVote(value.votes, value._id)
-												}
+												onClick={() => this.decrementVote(value.votes, value._id)}
 											/>
 										</div>
 										<div className="post-title" style={{ marginLeft: "850px" }}>
@@ -384,7 +370,7 @@ class AllCommunities extends Component {
 										<span className="title">
 											<Link
 												className="text-decoration-none text-dark h4"
-												to={`/community/:${value.communityName}`}
+												to={`/community/${value.communityName}`}
 											>
 												<strong>r/{value.communityName}</strong>
 											</Link>
