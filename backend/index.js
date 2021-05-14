@@ -15,6 +15,7 @@ const communityhome = require("./routes/communityHome");
 const communityhome1 = require("./routes/communityHome1");
 const imageUpload = require("./routes/uploads");
 const getImage = require("./routes/images");
+const viewprofile = require("./routes/viewprofile");
 
 app.use("/api/login", login);
 app.use("/api/signup", signup);
@@ -29,11 +30,12 @@ app.use("/api/uploads", imageUpload);
 app.use("/api/images", getImage);
 
 app.use("/api/communityhome", communityhome);
+app.use("/api/viewprofile", viewprofile);
 
 const port = process.env.PORT || 3001;
 
 app.listen(port, () => {
-	console.log(`Server listening on port ${port}`);
+  console.log(`Server listening on port ${port}`);
 });
 
 module.exports = app;

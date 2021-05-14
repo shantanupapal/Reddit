@@ -11,6 +11,7 @@ const postSchema = new Schema(
 		comments: [{ type: Schema.Types.ObjectId, ref: "comment" }],
 		createdBy: { type: mongoose.Schema.Types.ObjectId, ref: "user" },
 		createdAt: { type: Date, default: Date.now },
+		communityId: { type: mongoose.Schema.Types.ObjectId, ref: "community" },
 	},
 	{
 		versionKey: false,

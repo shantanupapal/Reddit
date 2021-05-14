@@ -3,6 +3,7 @@ import {
   ADD_RULE,
   UPDATE_DESC,
   DELETE_COMMUNITY,
+  GET_COMMUNITY_BY_ID,
 } from "./types";
 import { backendURI } from "../../utils/config";
 import axios from "axios";
@@ -10,9 +11,8 @@ import axios from "axios";
 export const getCommunity = (user) => (dispatch) => {
   console.log("values", user);
   axios.defaults.withCredentials = true;
-  axios.defaults.headers.common["authorization"] = localStorage.getItem(
-    "token"
-  );
+  axios.defaults.headers.common["authorization"] =
+    localStorage.getItem("token");
   axios
     .get(`${backendURI}/api/mycommunity/getCommunityDetails`, {
       params: {
@@ -31,12 +31,34 @@ export const getCommunity = (user) => (dispatch) => {
     });
 };
 
+export const getCommunityById = (user) => (dispatch) => {
+  console.log("values", user);
+  axios.defaults.withCredentials = true;
+  axios.defaults.headers.common["authorization"] =
+    localStorage.getItem("token");
+  axios
+    .get(`${backendURI}/api/mycommunity/getCommunityDetailsById`, {
+      params: {
+        community_id: user.community_id,
+      },
+    })
+    .then((response) => {
+      console.log("Received response from server:", response);
+      return dispatch({
+        type: GET_COMMUNITY_BY_ID,
+        payload: response.data,
+      });
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+};
+
 export const addRule = (rule) => (dispatch) => {
   console.log("rule is: ", rule);
   axios.defaults.withCredentials = true;
-  axios.defaults.headers.common["authorization"] = localStorage.getItem(
-    "token"
-  );
+  axios.defaults.headers.common["authorization"] =
+    localStorage.getItem("token");
   axios
     .post(`${backendURI}/api/mycommunity/addRule`, rule)
     .then((response) => {
@@ -62,9 +84,8 @@ export const addRule = (rule) => (dispatch) => {
 export const updateDesc = (desc) => (dispatch) => {
   console.log("desc is: ", desc);
   axios.defaults.withCredentials = true;
-  axios.defaults.headers.common["authorization"] = localStorage.getItem(
-    "token"
-  );
+  axios.defaults.headers.common["authorization"] =
+    localStorage.getItem("token");
   axios
     .post(`${backendURI}/api/mycommunity/updateDesc`, desc)
     .then((response) => {
@@ -90,9 +111,8 @@ export const updateDesc = (desc) => (dispatch) => {
 export const deleteCommunity = (leave) => (dispatch) => {
   console.log("community is: ", leave);
   axios.defaults.withCredentials = true;
-  axios.defaults.headers.common["authorization"] = localStorage.getItem(
-    "token"
-  );
+  axios.defaults.headers.common["authorization"] =
+    localStorage.getItem("token");
   axios
     .post(`${backendURI}/api/mycommunity/deleteCommunity`, leave)
     .then((response) => {

@@ -8,3 +8,4 @@ export const GET_COMMUNITY = "GET_COMMUNITY";
 export const ADD_RULE = "ADD_RULE";
 export const UPDATE_DESC = "UPDATE_DESC";
 export const DELETE_COMMUNITY = "DELETE_COMMUNITY";
+export const GET_COMMUNITY_BY_ID = "GET_COMMUNITY_BY_ID";

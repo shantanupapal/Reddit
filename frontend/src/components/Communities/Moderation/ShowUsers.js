@@ -45,8 +45,8 @@ class ShowUsers extends Component {
 				userList: selectedUsers,
 			};
 			console.log("data to post: ", data);
-			// axios.defaults.headers.common["authorization"] =
-			// 	localStorage.getItem("token");
+			axios.defaults.headers.common["authorization"] =
+				localStorage.getItem("token");
 			axios
 				.post(`${backendURI}/api/moderation/acceptuserrequest`, data)
 				.then((response) => {
@@ -74,7 +74,7 @@ class ShowUsers extends Component {
 			<div>
 				<div>
 					<button onClick={this.handleShow}>
-						{this.props.community.communityName}
+						r/{this.props.community.communityName}
 					</button>
 				</div>
 
@@ -131,19 +131,21 @@ class ShowUsers extends Component {
 											<h5 className="text-danger">No User requests</h5>
 										)}
 
-										<div className="row mt-5">
+										<div className="row input-group mt-5">
 											<button
 												type="submit"
 												onClick={this.handleClose}
-												className="float -left btn btn-secondary "
+												className="btn btn-secondary"
+												style={{ marginLeft: "50px" }}
 											>
-												close
+												Cancel
 											</button>
 											<button
 												type="submit"
-												className="float-right btn btn-primary"
+												className="btn btn-primary float-right"
+												style={{ marginLeft: "100px" }}
 											>
-												Save
+												Accept Request
 											</button>
 										</div>
 									</form>

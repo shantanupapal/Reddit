@@ -77,4 +77,23 @@ router.get("/getCommunityDetails", checkAuth, async (req, res) => {
   });
 });
 
+router.get("/getCommunityDetailsById", checkAuth, async (req, res) => {
+  let msg = {};
+  msg = req.query;
+  console.log(msg);
+  msg.route = "getCommunityDetailsById";
+
+  kafka.make_request("mycommunity", msg, function (err, results) {
+    if (err) {
+      msg.error = err.data;
+      logger.error(msg);
+      return res.status(err.status).send(err.data);
+    } else {
+      msg.status = results.status;
+      logger.info(msg);
+      return res.status(results.status).send(results.data);
+    }
+  });
+});
+
 module.exports = router;

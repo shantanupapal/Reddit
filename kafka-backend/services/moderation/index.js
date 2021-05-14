@@ -1,6 +1,7 @@
 "use strict";
 const { getAllCommunities } = require("./getAllCommunities");
 const { acceptUserRequest } = require("./acceptUserRequest");
+const { removeUserRequest } = require("./removeUserRequest");
 
 let handle_request = (msg, callback) => {
 	switch (msg.route) {
@@ -9,6 +10,9 @@ let handle_request = (msg, callback) => {
 			break;
 		case "accept_user_request":
 			acceptUserRequest(msg, callback);
+			break;
+		case "remove_user_request":
+			removeUserRequest(msg, callback);
 			break;
 	}
 };

@@ -13,26 +13,34 @@ import Invitation from "./Invitation";
 import MyCommunities from "./MyCommunities/MyCommunities";
 import ViewCommunity from "./MyCommunities/MyCommunityProfile";
 import Dashboard from "./Dashboard";
+import MyCommunityAnalytics from "./MyCommunities/MyCommunityAnalytics";
+import ViewProfile from "./ViewProfile/ViewProfile";
 
 const Main = () => {
-	return (
-		<div>
-			<Route exact path="/" component={Landing} />
-			<Route exact path="/Login" component={Login} />
-			<Route exact path="/Signup" component={Signup} />
-			<Route exact path="/Profile" component={Profile} />
-			<Route exact path="/CreateCommunity" component={CreateCommunity} />
-			<Route exact={false} path="/community/:name" component={CommunityHome} />
+  return (
+    <div>
+      <Route exact path="/" component={Landing} />
+      <Route exact path="/Login" component={Login} />
+      <Route exact path="/Signup" component={Signup} />
+      <Route exact path="/Profile" component={Profile} />
+      <Route exact path="/CreateCommunity" component={CreateCommunity} />
+      <Route exact={false} path="/community/:name" component={CommunityHome} />
 
-			<Route exact path="/ChangePassword" component={ChangePassword} />
-			<Route exact path="/Moderation" component={Moderation} />
-			<Route exact path="/Chat" component={Chat} />
-			<Route exact path="/Invitation" component={Invitation} />
-			<Route exact path="/MyCommunities" component={MyCommunities} />
-			<Route exact path="/viewCommunityProfile" component={ViewCommunity} />
-			<Route exact path="/Dashboard" component={Dashboard} />
-		</div>
-	);
+      <Route exact path="/ChangePassword" component={ChangePassword} />
+      <Route exact path="/Moderation" component={Moderation} />
+      <Route exact path="/Chat" component={Chat} />
+      <Route exact path="/Invitation" component={Invitation} />
+      <Route exact path="/MyCommunities" component={MyCommunities} />
+      <Route exact path="/viewCommunityProfile" component={ViewCommunity} />
+      <Route exact path="/Dashboard" component={Dashboard} />
+      <Route exact path="/ViewProfile/:userid" component={ViewProfile} />
+      <Route
+        exact
+        path="/MyCommunityAnalytics"
+        component={MyCommunityAnalytics}
+      />
+    </div>
+  );
 };
 
 export default Main;

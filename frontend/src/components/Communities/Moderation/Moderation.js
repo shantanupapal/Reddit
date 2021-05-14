@@ -1,17 +1,17 @@
 import React, { Component } from "react";
 import NavbarMain from "../../Layout/NavbarMain";
-import { Redirect } from "react-router";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { getAllCommunities } from "../../../redux/actions/moderationActions";
-import { Link } from "react-router-dom";
 import Card from "@material-ui/core/Card";
 import CardHeader from "@material-ui/core/CardHeader";
 import CardActions from "@material-ui/core/CardActions";
 import Avatar from "@material-ui/core/Avatar";
 import IconButton from "@material-ui/core/IconButton";
 import PeopleIcon from "@material-ui/icons/GroupAdd";
+import PeopleAltIcon from "@material-ui/icons/PeopleAlt";
 import ShowUsers from "./ShowUsers";
+import JoinedUsers from "./JoinedUsers";
 import "./moderation.css";
 class Moderation extends Component {
 	constructor(props) {
@@ -32,6 +32,12 @@ class Moderation extends Component {
 	getRequestedUsers = (members) => {
 		return members.length > 0
 			? members.filter((value) => value.acceptStatus === 0).length
+			: 0;
+	};
+
+	getJoinedUsers = (members) => {
+		return members.length > 0
+			? members.filter((value) => value.acceptStatus === 1).length
 			: 0;
 	};
 
@@ -59,9 +65,14 @@ class Moderation extends Component {
 										<IconButton>
 											<PeopleIcon />
 										</IconButton>
-
 										{"User Requests "}
 										{this.getRequestedUsers(com.communityMembers)}
+										<IconButton>
+											<PeopleAltIcon />
+										</IconButton>
+										<JoinedUsers community={com} />
+										{": "}
+										{this.getJoinedUsers(com.communityMembers)}
 									</CardActions>
 								</Card>
 							))}
