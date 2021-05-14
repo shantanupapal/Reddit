@@ -58,7 +58,11 @@ class MyCommunities extends Component {
       });
     }
   };
-
+  getRequestedUsers = (members) => {
+    return members.length > 0
+      ? members.filter((value) => value.acceptStatus === 0).length
+      : 0;
+  };
   componentWillReceiveProps(nextProps) {
     console.log("----------", nextProps);
     if (nextProps.myCommunity) {
@@ -189,7 +193,8 @@ class MyCommunities extends Component {
                         className="person-img"
                       ></img>
                     </IconButton>
-                    {value.joinedUsers}
+                    {/* {value.joinedUsers} */}
+                    {this.getRequestedUsers(value.joinedUsers)}
                     <IconButton>
                       <img
                         src={post}

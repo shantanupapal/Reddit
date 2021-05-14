@@ -8,13 +8,13 @@ const path = require("path");
 const uploadFileToS3 = require("../utils/awsS3");
 const multer = require("multer");
 
-const storage = multer.diskStorage({
-  destination: path.join(__dirname, "..") + "/public/userImage",
+const comStorage = multer.diskStorage({
+  destination: path.join(__dirname, "..") + "/public/comImage",
   filename: (req, file, cb) => {
     cb(
       null,
       "user" +
-        req.params.userId +
+        req.params.communityId +
         "-" +
         Date.now() +
         path.extname(file.originalname)
@@ -22,16 +22,17 @@ const storage = multer.diskStorage({
   },
 });
 
-const upload = multer({ storage: storage }).single("image");
+const comUpload = multer({ storage: comStorage }).single("com_image");
 
-router.post("/:userId", upload, async (req, res) => {
+router.post("/:communityId", comUpload, async (req, res) => {
+  console.log("inside commn upload");
   let msg = req.params;
-  msg.route = "profile_Image";
-
+  msg.route = "community_Image";
+  console.log("req param", req.params);
   let imageUrl = "";
   if (req.file) {
     try {
-      imageUrl = await uploadFileToS3(req.file, "image", msg.userId);
+      imageUrl = await uploadFileToS3(req.file, "com_image", msg.communityId);
       msg.userImage = imageUrl.Location;
     } catch (error) {
       console.log(error);
@@ -54,7 +55,4 @@ router.post("/:userId", upload, async (req, res) => {
     }
   );
 });
-
-
-
 module.exports = router;
