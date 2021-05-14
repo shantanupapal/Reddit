@@ -1,7 +1,7 @@
 "use strict";
 const config = {
 	secret: "cmpe273_kafka_passport_mongo",
-	frontendURI: "http://localhost:3000",
+	frontendURI: "http://13.233.148.200:3000",
 	kafkaURI: "localhost:2181",
 	mysqlUser: "admin",
 	mysqlPassword: "adminpayal",
