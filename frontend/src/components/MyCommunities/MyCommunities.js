@@ -4,7 +4,6 @@ import Card from "@material-ui/core/Card";
 import CardHeader from "@material-ui/core/CardHeader";
 import CardContent from "@material-ui/core/CardContent";
 import CardActions from "@material-ui/core/CardActions";
-import Avatar from "@material-ui/core/Avatar";
 import IconButton from "@material-ui/core/IconButton";
 import Typography from "@material-ui/core/Typography";
 import "./MyCommunities.css";
@@ -13,6 +12,7 @@ import post from "../../images/post.svg";
 import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
+import logo from "../../images/default_logo.png";
 import { getCommunity } from "../../redux/actions/myCommunityActions";
 
 class MyCommunities extends Component {
@@ -140,7 +140,17 @@ class MyCommunities extends Component {
             ? currentItems.map((value) => (
                 <Card className="root">
                   <CardHeader
-                    avatar={<Avatar aria-label="recipe">R</Avatar>}
+                    avatar={
+                      <img
+                        src={logo}
+                        alt="profilepic"
+                        style={{
+                          height: "50px",
+                          width: "50px",
+                          borderRadius: "50%",
+                        }}
+                      />
+                    }
                     title={
                       <Link
                         to={{
@@ -164,6 +174,7 @@ class MyCommunities extends Component {
                       variant="body2"
                       color="textSecondary"
                       component="p"
+                      className="text-justify"
                     >
                       {value.description}
                     </Typography>

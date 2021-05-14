@@ -3,6 +3,7 @@ const { addRule } = require("./addRule");
 const { updateDesc } = require("./updateDesc");
 const { deleteCommunity } = require("./deleteCommunity");
 const { getCommunityDetails } = require("./getCommunityDetails");
+const { getCommunityDetailsById } = require("./getCommunityDetailsById");
 
 let handle_request = (msg, callback) => {
   switch (msg.route) {
@@ -18,8 +19,11 @@ let handle_request = (msg, callback) => {
     case "getCommunityDetails":
       getCommunityDetails(msg, callback);
       break;
+    case "getCommunityDetailsById":
+      getCommunityDetailsById(msg, callback);
+      break;
   }
 };
 
 exports.handle_request = handle_request;
-getCommunityDetails
+getCommunityDetails;

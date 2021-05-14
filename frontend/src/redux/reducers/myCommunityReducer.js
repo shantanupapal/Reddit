@@ -3,10 +3,12 @@ import {
   ADD_RULE,
   UPDATE_DESC,
   DELETE_COMMUNITY,
+  GET_COMMUNITY_BY_ID,
 } from "../actions/types";
 
 const initialState = {
   myCommunity: {},
+  myCommunityById: {},
 };
 
 export default function myCommunityReducer(state = initialState, action) {
@@ -15,6 +17,13 @@ export default function myCommunityReducer(state = initialState, action) {
       return {
         ...state,
         myCommunity: action.payload,
+      };
+
+    case GET_COMMUNITY_BY_ID:
+      console.log("payload", action.payload);
+      return {
+        ...state,
+        myCommunityById: action.payload,
       };
 
     case ADD_RULE:

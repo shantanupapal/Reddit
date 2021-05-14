@@ -5,18 +5,20 @@ import Card from "@material-ui/core/Card";
 import CardHeader from "@material-ui/core/CardHeader";
 // import CardMedia from "@material-ui/core/CardMedia";
 import CardContent from "@material-ui/core/CardContent";
-import Avatar from "@material-ui/core/Avatar";
 import Typography from "@material-ui/core/Typography";
 import "./MyCommunities.css";
 import Modal from "react-bootstrap/Modal";
 import { Button } from "react-bootstrap";
 import { Redirect } from "react-router";
-// import PropTypes from "prop-types";
+import PropTypes from "prop-types";
+import logo from "../../images/default_logo.png";
 import { connect } from "react-redux";
 import {
   addRule,
   updateDesc,
   deleteCommunity,
+  getCommunityById,
+  getCommunity,
 } from "../../redux/actions/myCommunityActions";
 
 function MyVerticallyCenteredModal(props) {
@@ -84,7 +86,7 @@ class MyCommunityProfile extends Component {
       descriptionEdit: false,
       modalShow: false,
       setModalShow: false,
-      myCommunity: this.props.location.state.community,
+      myCommunity: this.props.myCommunity[0],
       red: "",
     };
     this.handleEdit = this.handleEdit.bind(this);
@@ -92,6 +94,31 @@ class MyCommunityProfile extends Component {
     this.setModalShowFalse = this.setModalShowFalse.bind(this);
     this.leaveCommunity = this.leaveCommunity.bind(this);
     this.addRule = this.addRule.bind(this);
+  }
+
+  componentDidMount() {
+    console.log("in here");
+    const data = {
+      community_id: this.props.location.state.community.communityId,
+    };
+    console.log("comm id", data.community_id);
+    this.props.getCommunityById(data);
+  }
+
+  componentWillReceiveProps(nextProps) {
+    console.log("----------", nextProps);
+    if (nextProps.myCommunity) {
+      // let { myCommunity } = nextProps;
+      // let communityDetails = {
+      //   communities: myCommunity,
+      // };
+      this.setState({
+        myCommunity: nextProps.myCommunity[0],
+      });
+      console.log(this.state.myCommunity);
+      // this.setState(communityDetails);
+      // console.log("userData is : ", communityDetails);
+    }
   }
 
   handleEdit = (e) => {
@@ -120,48 +147,77 @@ class MyCommunityProfile extends Component {
     });
   };
 
-  changeDescription = (e) => {
+  changeDescription = async (e) => {
     e.preventDefault();
     const data = {
       community_id: this.state.myCommunity.communityId,
       desc: this.state.desc,
     };
-    this.props.updateDesc(data);
+    await this.props.updateDesc(data);
     this.setState({
       descriptionEdit: !this.state.descriptionEdit,
     });
+    const data1 = {
+      community_id: this.props.location.state.community.communityId,
+    };
+    console.log("comm id", data.community_id);
+    this.props.getCommunityById(data1);
+    console.log(
+      "sadfsadfsdafsadfsadfsadfsadfsdfsdafsadf",
+      this.state.myCommunity
+    );
+    this.setState({
+      red: (
+        <Redirect
+          to={{
+            pathname: "/viewCommunityProfile",
+            state: { community: this.state.myCommunity },
+          }}
+        />
+      ),
+    });
   };
 
-  leaveCommunity = (e) => {
+  leaveCommunity = async (e) => {
     e.preventDefault();
     const data = {
       community_id: this.state.myCommunity.communityId,
     };
-    this.props.deleteCommunity(data);
+    await this.props.deleteCommunity(data);
+    const user = localStorage.getItem("userid");
+    console.log("current user ID: ", user);
+    const data1 = {
+      user: user,
+    };
+    this.props.getCommunity(data1);
     this.setState({
       red: <Redirect to="/mycommunities" />,
     });
   };
 
-  addRule = (e) => {
+  addRule = async (e) => {
     e.preventDefault();
-
     const data = {
       community_id: this.state.myCommunity.communityId,
       title: this.state.title,
       desc: this.state.description,
     };
     console.log("rule data: ", data);
-    this.props.addRule(data);
+    await this.props.addRule(data);
     this.setState({
       setModalShow: false,
     });
+    const data1 = {
+      community_id: this.props.location.state.community.communityId,
+    };
+    console.log("comm id", data.community_id);
+    this.props.getCommunityById(data1);
     this.setState({
       red: (
         <Redirect
           to={{
             pathname: "/viewCommunityProfile",
-            state: { community: this.props.location.state.community },
+            state: { community: this.state.myCommunity },
           }}
         />
       ),
@@ -169,10 +225,14 @@ class MyCommunityProfile extends Component {
   };
 
   render() {
-    console.log("....", this.state);
+    console.log("....", this.props.location.state.community);
+    let list = this.state.myCommunity;
+    console.log("comminaonio", list);
+    let red = this.state.red;
+    console.log("sdafsdafsdf", this.state.red);
     return (
       <div className="container-fluid">
-        {this.state.red}
+        {red}
         <NavbarMain />
         <div className="container">
           <Card className="root">
@@ -184,7 +244,18 @@ class MyCommunityProfile extends Component {
             </button>
             <CardHeader
               className="community-title text-uppercase"
-              avatar={<Avatar aria-label="recipe">R</Avatar>}
+              avatar={
+                <img
+                  src={logo}
+                  alt="profilepic"
+                  style={{
+                    height: "50px",
+                    width: "50px",
+                    marginTop: "8px",
+                    borderRadius: "50%",
+                  }}
+                />
+              }
               title={this.state.myCommunity.communityName}
               subheader={this.state.myCommunity.createdAt.split("T")[0]}
             />
@@ -194,36 +265,85 @@ class MyCommunityProfile extends Component {
               image="/static/images/cards/paella.jpg"
               title="Paella dish"
             /> */}
+            <hr />
             <CardContent>
-              {!this.state.descriptionEdit ? (
-                <Typography variant="body2" color="textSecondary" component="p">
-                  <div>{this.state.myCommunity.description}</div>
-                  <button
-                    className="btn btn-secondary mt-3"
-                    onClick={this.handleEdit}
-                  >
-                    Edit Description
-                  </button>
-                </Typography>
-              ) : (
-                <div>
-                  <textarea
-                    className="w-50 p-2"
-                    name="desc"
-                    id="desc"
-                    onChange={this.onRuleAdd}
-                  >
-                    {this.state.myCommunity.description}
-                  </textarea>
-                  <br />
-                  <button
-                    className="btn btn-success mt-3"
-                    onClick={this.changeDescription}
-                  >
-                    Submit
-                  </button>
+              <div className="d-flex mb-5">
+                <div
+                  style={{
+                    width: "80%",
+                  }}
+                >
+                  {!this.state.descriptionEdit ? (
+                    <Typography
+                      variant="body2"
+                      color="textSecondary"
+                      component="p"
+                    >
+                      <div className="text-justify">
+                        {this.state.myCommunity.description}
+                      </div>
+                      <button
+                        className="btn btn-secondary mt-3"
+                        onClick={this.handleEdit}
+                      >
+                        Edit Description
+                      </button>
+                    </Typography>
+                  ) : (
+                    <div>
+                      <textarea
+                        className="w-75 p-2 text-justify"
+                        name="desc"
+                        id="desc"
+                        style={{
+                          border: "inset",
+                        }}
+                        onChange={this.onRuleAdd}
+                      >
+                        {this.state.myCommunity.description}
+                      </textarea>
+                      <br />
+                      <button
+                        className="btn btn-success mt-3"
+                        onClick={this.changeDescription}
+                      >
+                        Submit
+                      </button>
+                    </div>
+                  )}
                 </div>
-              )}
+                <div className="ml-5">
+                  <img
+                    src={logo}
+                    alt="profilepic"
+                    style={{
+                      height: "50px",
+                      width: "50px",
+                      marginTop: "8px",
+                    }}
+                  />
+                  <form className="my-5" onSubmit={this.onUpload}>
+                    <div class="form-group">
+                      <label htmlFor="image">
+                        Change your community logo:{" "}
+                      </label>
+                      <input
+                        type="file"
+                        className="form-control-file"
+                        name="image"
+                        accept="image/*"
+                        onChange={this.onImageChange}
+                        id="profileimg"
+                        required
+                      />
+                    </div>
+                    <button type="submit" className="btn btn-primary">
+                      Upload
+                    </button>
+                  </form>
+                </div>
+              </div>
+              <hr />
               <div className="mt-4">
                 <h5>Rules</h5>
                 {this.state.myCommunity.rules.length > 0
@@ -256,6 +376,22 @@ class MyCommunityProfile extends Component {
   }
 }
 
-export default connect(null, { addRule, updateDesc, deleteCommunity })(
-  MyCommunityProfile
-);
+MyCommunityProfile.propTypes = {
+  getCommunityById: PropTypes.func.isRequired,
+  myCommunityById: PropTypes.object.isRequired,
+};
+
+const mapStateToProps = (state) => {
+  console.log("on frontedn", state.myCommunity.myCommunityById);
+  return {
+    myCommunity: state.myCommunity.myCommunityById,
+  };
+};
+
+export default connect(mapStateToProps, {
+  addRule,
+  updateDesc,
+  deleteCommunity,
+  getCommunityById,
+  getCommunity,
+})(MyCommunityProfile);
