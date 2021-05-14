@@ -1,5 +1,7 @@
 "use strict";
 const Community = require("../../models/communityModel");
+const Comment = require("../../models/commentModel");
+const Post = require("../../models/postModel");
 const { STATUS_CODE, MESSAGES } = require("../../utils/constants");
 const mongoose = require("mongoose");
 
@@ -12,7 +14,7 @@ let removeUserRequest = async (msg, callback) => {
 		let objectIdArray = msg.data.userList.map((s) =>
 			mongoose.Types.ObjectId(s)
 		);
-		let deleted = await Community.findOneAndUpdate(
+		let deletedUsers = await Community.findOneAndUpdate(
 			{
 				_id: msg.data.communityId,
 			},
@@ -25,7 +27,17 @@ let removeUserRequest = async (msg, callback) => {
 			}
 		);
 
-		if (deleted) {
+		let deletedPost = await Post.deleteMany({
+			communityId: msg.data.communityId,
+			createdBy: { $in: objectIdArray },
+		});
+
+		let deletedComment = await Comment.deleteMany({
+			communityId: msg.data.communityId,
+			commentedBy: { $in: objectIdArray },
+		});
+
+		if (deletedUsers && deletedPost && deletedComment) {
 			console.log("deleted");
 			response.status = STATUS_CODE.SUCCESS;
 			response.data = "DELETED_USERS";
