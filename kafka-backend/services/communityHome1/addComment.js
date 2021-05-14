@@ -16,7 +16,7 @@ let addComment = async (msg, callback) => {
 			commentedBy: msg.user_id,
 			nestedComments: [],
 		});
-		console.log("----------------", msg);
+		// console.log("----------------", msg);
 		if (msg.comment_id !== null) {
 			let existingComment = await Comment.findById({
 				_id: msg.comment_id,

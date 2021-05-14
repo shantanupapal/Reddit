@@ -29,6 +29,7 @@ class SinglePost extends Component {
 			.then((response) => {
 				// this.props.history.push("/community/" + communityName);
 				this.props.getCommunityData();
+				// window.reload();
 				console.log("Actions::response from vote", response.data);
 			})
 			.catch((error) => {
@@ -51,6 +52,7 @@ class SinglePost extends Component {
 			.then((response) => {
 				// this.props.history.push("/community/" + communityName);
 				this.props.getCommunityData();
+				// window.reload();
 				console.log("Actions::response from vote", response.data);
 			})
 			.catch((error) => {
@@ -66,7 +68,8 @@ class SinglePost extends Component {
 	changePostComment = (e) => {
 		this.setState({ comment: e.target.value });
 	};
-	commentOnPost = () => {
+	commentOnPost = (e) => {
+		e.preventDefault();
 		let communityName = this.props.match.params.name;
 		let communityId = localStorage.getItem("communityid");
 		let user_id = localStorage.getItem("userid");
@@ -81,6 +84,7 @@ class SinglePost extends Component {
 			.then((response) => {
 				// this.props.history.push("/community/" + communityName);
 				this.props.getCommunityData();
+				// window.reload();
 				console.log("Actions::response from add comment on post", response.data);
 			})
 			.catch((error) => {
@@ -199,6 +203,7 @@ class Posts extends Component {
 			})
 			.then((response) => {
 				this.props.getCommunityData();
+				// window.reload();
 				// this.props.history.push("/community/" + communityName);
 				// let photoData = new FormData();
 				// photoData.append("file", this.state.postImage);
@@ -366,6 +371,7 @@ class Comment extends Component {
 			.then((response) => {
 				// this.props.history.push("/community/" + communityName);
 				this.props.getCommunityData();
+				// window.reload();
 				console.log("Actions::response from vote", response.data);
 			})
 			.catch((error) => {
@@ -388,6 +394,7 @@ class Comment extends Component {
 			.then((response) => {
 				// this.props.history.push("/community/" + communityName);
 				this.props.getCommunityData();
+				// window.reload();
 				console.log("Actions::response from vote", response.data);
 			})
 			.catch((error) => {
@@ -418,6 +425,7 @@ class Comment extends Component {
 			.then((response) => {
 				// this.props.history.push("/community/" + communityName);
 				this.props.getCommunityData();
+				// window.reload();
 				console.log("Actions::response from add comment on post", response.data);
 			})
 			.catch((error) => {
@@ -552,6 +560,7 @@ class CommunityHome extends Component {
 				// this.props.history.push("/community/" + communityName);
 				console.log("join community");
 				this.getCommunityData();
+				// window.reload();
 				console.log("Actions::response from join community", response.data);
 			})
 			.catch((error) => {
@@ -564,7 +573,7 @@ class CommunityHome extends Component {
 		let user_id = localStorage.getItem("userid");
 		axios
 			.post(`${backendURI}/api/communityhome1/join_leave/`, {
-				communityId: communityId,
+				community_id: communityId,
 				user_id: user_id,
 				acceptStatus: 3,
 			})
@@ -572,6 +581,7 @@ class CommunityHome extends Component {
 				// this.props.history.push("/community/" + communityName);
 				console.log("leave community");
 				this.getCommunityData();
+				// window.reload();
 				console.log("Actions::response from join community", response.data);
 			})
 			.catch((error) => {
