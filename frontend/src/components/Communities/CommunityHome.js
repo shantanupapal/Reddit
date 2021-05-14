@@ -13,7 +13,8 @@ class SinglePost extends Component {
 		super();
 		this.state = { comment: "", showReplyToPostModal: false };
 	}
-	downvotePost = () => {
+	downvotePost = (e) => {
+		e.preventDefault();
 		let communityName = this.props.match.params.name;
 		let communityId = localStorage.getItem("communityid");
 		let user_id = localStorage.getItem("userid");
@@ -36,7 +37,8 @@ class SinglePost extends Component {
 				console.log(error);
 			});
 	};
-	upvotePost = () => {
+	upvotePost = (e) => {
+		e.preventDefault();
 		let communityName = this.props.match.params.name;
 		let communityId = localStorage.getItem("communityid");
 		let user_id = localStorage.getItem("userid");
@@ -84,7 +86,6 @@ class SinglePost extends Component {
 			.then((response) => {
 				// this.props.history.push("/community/" + communityName);
 				this.props.getCommunityData();
-				// window.reload();
 				console.log("Actions::response from add comment on post", response.data);
 			})
 			.catch((error) => {
@@ -155,6 +156,11 @@ class SinglePost extends Component {
 					</div>
 					<div className="border-bottom pb-2">
 						<span>{this.props.post.body} </span>
+						<span>
+							<a href={this.props.post.link} target="_blank">
+								{this.props.post.link}
+							</a>
+						</span>
 					</div>
 					<div className="border-bottom pb-2">{postImage && <img src={postImage} alt="Imageinpost" />}</div>
 
@@ -183,9 +189,54 @@ class SinglePost extends Component {
 class Posts extends Component {
 	constructor() {
 		super();
-		this.state = { postTitle: null, postBody: null, postLink: null, postImage: null };
+		this.state = { postTitle: "", postBody: "", postLink: "", postImage: null };
+
+		this.state = {
+			postTitle: "",
+			postBody: "",
+			postLink: "",
+			postImage: null,
+			posts: [],
+			asc: false,
+		};
 	}
-	createPost = () => {
+
+	componentDidMount() {
+		this.setState({ posts: this.props.posts });
+	}
+	validURL = (str) => {
+		var pattern = new RegExp(
+			"^(https?:\\/\\/)?" + // protocol
+				"((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|" + // domain name
+				"((\\d{1,3}\\.){3}\\d{1,3}))" + // OR ip (v4) address
+				"(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*" + // port and path
+				"(\\?[;&a-z\\d%_.~+=-]*)?" + // query string
+				"(\\#[-a-z\\d_]*)?$",
+			"i"
+		); // fragment locator
+		return !!pattern.test(str);
+	};
+	validatePost = () => {
+		let formIsValid = true;
+		if (this.state.postTitle.trim() === "" || this.state.postBody.trim() === "") {
+			formIsValid = false;
+			alert("Please fill all fields");
+		}
+		let isLinkValid = true;
+		if (this.state.postLink.length > 0) {
+			isLinkValid = this.validURL(this.state.postLink);
+			if (!isLinkValid) {
+				alert("Put proper link");
+				return false;
+			}
+		}
+		return formIsValid;
+	};
+	createPost = (e) => {
+		e.preventDefault();
+		if (!this.validatePost()) {
+			return;
+		}
 		let communityName = this.props.match.params.name;
 		let communityId = localStorage.getItem("communityid");
 		let user_id = localStorage.getItem("userid");
@@ -242,10 +293,122 @@ class Posts extends Component {
 	onFileChangeHandler = (e) => {
 		this.setState({ postImage: e.target.files[0] });
 	};
+	// sortByVotes = () => {};
+	// sortByComments = () => {};
+	// sortByDate = () => {};
+	sortByVotes = () => {
+		this.setState({ asc: !this.state.asc });
+		let posts = this.state.posts;
+		if (this.state.asc === false) {
+			posts.sort((a, b) => {
+				if (a.votes > b.votes) {
+					return -1;
+				}
+				if (a.votes < b.votes) {
+					return 1;
+				}
+				return 0;
+			});
+			this.setState({
+				posts: posts,
+			});
+		} else {
+			posts.sort((a, b) => {
+				if (a.votes < b.votes) {
+					return -1;
+				}
+				if (a.votes > b.votes) {
+					return 1;
+				}
+				return 0;
+			});
+			this.setState({
+				posts: posts,
+			});
+		}
+	};
+
+	sortByDate = () => {
+		this.setState({ asc: !this.state.asc });
+		let date = this.state.posts;
+		if (this.state.asc === false) {
+			date.sort((a, b) => {
+				if (a.createdAt > b.createdAt) {
+					return -1;
+				}
+				if (a.createdAt < b.createdAt) {
+					return 1;
+				}
+				return 0;
+			});
+			this.setState({
+				posts: date,
+			});
+		} else {
+			date.sort((a, b) => {
+				if (a.createdAt < b.createdAt) {
+					return -1;
+				}
+				if (a.createdAt > b.createdAt) {
+					return 1;
+				}
+				return 0;
+			});
+			this.setState({
+				posts: date,
+			});
+		}
+	};
+
+	sortByComments = () => {
+		this.setState({ asc: !this.state.asc });
+		let comments = this.state.posts;
+		if (this.state.asc === false) {
+			comments.sort((a, b) => {
+				if (a.comments > b.comments) {
+					return -1;
+				}
+				if (a.comments < b.comments) {
+					return 1;
+				}
+				return 0;
+			});
+			this.setState({
+				posts: comments,
+			});
+		} else {
+			comments.sort((a, b) => {
+				if (a.comments < b.comments) {
+					return -1;
+				}
+				if (a.comments > b.comments) {
+					return 1;
+				}
+				return 0;
+			});
+			this.setState({
+				posts: comments,
+			});
+		}
+	};
 	render() {
 		console.log(this.props);
 		return (
 			<div className="">
+				<div className="row">
+					<div className="col-lg-12">
+						<span>Sort By:</span>
+						<button className="btn btn-link" onClick={this.sortByVotes}>
+							Votes
+						</button>
+						<button className="btn btn-link" onClick={this.sortByComments}>
+							Comments
+						</button>
+						<button className="btn btn-link" onClick={this.sortByDate}>
+							Upload Date
+						</button>
+					</div>
+				</div>
 				{this.props.checkCommunityUserStatus() === 1 ? (
 					<div className="col-lg-12 border m-2 pt-2 pb-4">
 						<span>
@@ -291,8 +454,8 @@ class Posts extends Component {
 
 				<div className="row">
 					<div className="col-lg-12">
-						{this.props.posts &&
-							this.props.posts.map((post) => {
+						{this.state.posts &&
+							this.state.posts.map((post) => {
 								return (
 									<SinglePost
 										getCommunityData={this.props.getCommunityData}
@@ -363,7 +526,8 @@ class Comment extends Component {
 		super();
 		this.state = { showModal: false, comment: "" };
 	}
-	upvoteComment = () => {
+	upvoteComment = (e) => {
+		e.preventDefault();
 		let communityName = this.props.match.params.name;
 		let communityId = localStorage.getItem("communityid");
 		let user_id = localStorage.getItem("userid");
@@ -386,7 +550,8 @@ class Comment extends Component {
 				console.log(error);
 			});
 	};
-	downvoteComment = () => {
+	downvoteComment = (e) => {
+		e.preventDefault();
 		let communityName = this.props.match.params.name;
 		let communityId = localStorage.getItem("communityid");
 		let user_id = localStorage.getItem("userid");
@@ -418,7 +583,8 @@ class Comment extends Component {
 	changeComment = (e) => {
 		this.setState({ comment: e.target.value });
 	};
-	submitComment = () => {
+	submitComment = (e) => {
+		e.preventDefault();
 		let communityName = this.props.match.params.name;
 		let communityId = localStorage.getItem("communityid");
 		let user_id = localStorage.getItem("userid");
@@ -525,7 +691,10 @@ class CommunityHome extends Component {
 	componentDidMount = () => {
 		this.getCommunityData();
 	};
-	getCommunityData = () => {
+	getCommunityData = (e) => {
+		if (e !== undefined) {
+			e.preventDefault();
+		}
 		let communityName = this.props.match.params.name;
 		axios
 			.get(`${backendURI}/api/communityhome/getCommunity/${communityName}`)
@@ -554,7 +723,8 @@ class CommunityHome extends Component {
 		return acceptStatus;
 	};
 
-	joinCommunity = () => {
+	joinCommunity = (e) => {
+		e.preventDefault();
 		let communityName = this.props.match.params.name;
 		let communityId = localStorage.getItem("communityid");
 		let user_id = localStorage.getItem("userid");
