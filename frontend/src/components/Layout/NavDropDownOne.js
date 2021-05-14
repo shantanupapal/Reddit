@@ -53,6 +53,15 @@ class NavDropDownOne extends Component {
             </Link>
           </Dropdown.Item>
           <Dropdown.Item>
+            <Link
+              to="/MyCommunityAnalytics"
+              className="nav-link"
+              style={{ color: "black" }}
+            >
+              <PeopleIcon /> My Communities Analytics
+            </Link>
+          </Dropdown.Item>
+          <Dropdown.Item>
             <Link to="/" className="nav-link" style={{ color: "black" }}>
               <MessageIcon /> Messages
             </Link>

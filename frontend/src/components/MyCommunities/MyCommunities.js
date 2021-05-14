@@ -21,8 +21,10 @@ class MyCommunities extends Component {
     this.state = {
       userId: localStorage.getItem("userid"),
       communities: [],
+      communitiesSort: [],
       currentPage: 1,
       itemsPerPage: 5,
+      sortData: [],
     };
     this.handleClick = this.handleClick.bind(this);
   }
@@ -44,25 +46,114 @@ class MyCommunities extends Component {
   }
 
   onChange = (e) => {
+    console.log("in");
+    if (e.target.value === "created") {
+      this.sortByDate();
+    } else if (e.target.value === "post") {
+      this.sortByPosts();
+    } else if (e.target.value === "user") {
+      this.sortByUsers();
+    } else if (e.target.value === "ascending") {
+      this.sortByAsc();
+    } else if (e.target.value === "descending") {
+      this.sortByDesc();
+    }
+  };
+
+  sortByAsc = () => {
+    let posts = this.state.communitiesSort;
+    posts.sort((a, b) => {
+      if (a.communityName < b.communityName) {
+        return -1;
+      }
+      if (a.communityName > b.communityName) {
+        return 1;
+      }
+      return 0;
+    });
     this.setState({
-      [e.target.id]: e.target.value,
+      ...posts,
+      communities: posts,
     });
   };
 
-  sortBy = () => {
-    if (this.state.sortBy === "Ascending") {
-      let communitiesSort = this.state.communities;
-      communitiesSort.sort();
-      this.setState({
-        communities: communitiesSort,
-      });
-    }
+  sortByDesc = () => {
+    let posts = this.state.communitiesSort;
+    posts.sort((a, b) => {
+      if (a.communityName > b.communityName) {
+        return -1;
+      }
+      if (a.communityName < b.communityName) {
+        return 1;
+      }
+      return 0;
+    });
+    this.setState({
+      ...posts,
+      communities: posts,
+    });
   };
+
+  sortByPosts = () => {
+    let posts = this.state.communitiesSort;
+    posts.sort((a, b) => {
+      if (a.totalPost > b.totalPost) {
+        return -1;
+      }
+      if (a.totalPost < b.totalPost) {
+        return 1;
+      }
+      return 0;
+    });
+    this.setState({
+      ...posts,
+      communities: posts,
+    });
+  };
+
+  sortByDate = () => {
+    let date = this.state.communitiesSort;
+
+    date.sort((a, b) => {
+      if (a.createdAt > b.createdAt) {
+        return -1;
+      }
+      if (a.createdAt < b.createdAt) {
+        return 1;
+      }
+      return 0;
+    });
+    this.setState({
+      ...date,
+      communities: date,
+    });
+  };
+
+  sortByUsers = () => {
+    let user = this.state.communitiesSort;
+
+    user.sort((a, b) => {
+      if (a.joinedUsers.length > b.joinedUsers.length) {
+        return -1;
+      }
+      if (a.joinedUsers.length < b.joinedUsers.length) {
+        return 1;
+      }
+      return 0;
+    });
+    this.setState({
+      ...user,
+      communities: user,
+    });
+  };
+
   getRequestedUsers = (members) => {
+    console.log("aaccc");
     return members.length > 0
-      ? members.filter((value) => value.acceptStatus === 0).length
+      ? members.filter((value) => value.acceptStatus === 1).length
       : 0;
   };
+
   componentWillReceiveProps(nextProps) {
     console.log("----------", nextProps);
     if (nextProps.myCommunity) {
@@ -72,6 +163,7 @@ class MyCommunities extends Component {
       // };
       this.setState({
         communities: nextProps.myCommunity,
+        communitiesSort: nextProps.myCommunity,
       });
       // this.setState(communityDetails);
       // console.log("userData is : ", communityDetails);
@@ -131,11 +223,11 @@ class MyCommunities extends Component {
                 onChange={this.onChange}
               >
                 <option>Default</option>
-                <option>Last Created</option>
-                <option>Number of Posts</option>
-                <option>Number of Users</option>
-                <option value="Ascending">Ascending</option>
-                <option>Descending</option>
+                <option value="created">Last Created</option>
+                <option value="post">Number of Posts</option>
+                <option value="user">Number of Users</option>
+                <option value="ascending">Ascending</option>
+                <option value="descending">Descending</option>
               </select>
             </div>
             <h1 className="mt-2">My Communities</h1>
@@ -161,9 +253,9 @@ class MyCommunities extends Component {
                           pathname: "/viewCommunityProfile",
                           state: { community: value },
                         }}
-                        className="text-decoration-none text-dark text-uppercase h3"
+                        className="text-decoration-none text-dark h3"
                       >
-                        {value.communityName}
+                        r/{value.communityName}
                       </Link>
                     }
                     subheader={value.createdAt.split("T")[0]}

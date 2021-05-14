@@ -243,7 +243,7 @@ class MyCommunityProfile extends Component {
               Leave
             </button>
             <CardHeader
-              className="community-title text-uppercase"
+              className="community-title"
               avatar={
                 <img
                   src={logo}
@@ -256,7 +256,7 @@ class MyCommunityProfile extends Component {
                   }}
                 />
               }
-              title={this.state.myCommunity.communityName}
+              title={"r/" + this.state.myCommunity.communityName}
               subheader={this.state.myCommunity.createdAt.split("T")[0]}
             />
 
