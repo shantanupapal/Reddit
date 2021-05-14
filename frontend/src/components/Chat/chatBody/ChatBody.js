@@ -32,7 +32,11 @@ export default class ChatBody extends Component {
                 />
             );
         } else {
-            chatContent = <div>Please select a chat</div>;
+            chatContent = (
+                <div className="main__chatbody">
+                    <h2>Please select an existing chat or start a new one</h2>
+                </div>
+            );
         }
 
         return (
