@@ -167,11 +167,23 @@ class MyCommunityProfile extends Component {
         alert("Image uploaded successfully!");
         this.setState({
           fileText: "Choose file",
-          userImage: response.data,
+          communityImage: response.data,
         });
-
-        const user = { userid: localStorage.getItem("userid") };
-        this.props.getUser(user);
+        const data1 = {
+          community_id: this.props.location.state.community.communityId,
+        };
+        console.log("comm id", data1.community_id);
+        this.props.getCommunityById(data1);
+        this.setState({
+          red: (
+            <Redirect
+              to={{
+                pathname: "/viewCommunityProfile",
+                state: { community: this.state.myCommunity },
+              }}
+            />
+          ),
+        });
       })
       .catch((err) => {
         console.log("Error" + err);
@@ -239,6 +251,11 @@ class MyCommunityProfile extends Component {
     });
   };
 
+  getImage = (img) => {
+    console.log("img is", img);
+    return `${backendURI}/api/images/com_image/${img}`;
+  };
+
   addRule = async (e) => {
     e.preventDefault();
     const data = {
@@ -297,7 +314,7 @@ class MyCommunityProfile extends Component {
               className="community-title"
               avatar={
                 <img
-                  src={logo}
+                  src={this.getImage(this.state.communityImage)}
                   alt="profilepic"
                   style={{
                     height: "50px",
