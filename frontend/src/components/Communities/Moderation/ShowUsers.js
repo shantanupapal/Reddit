@@ -74,7 +74,7 @@ class ShowUsers extends Component {
 			<div>
 				<div>
 					<button onClick={this.handleShow}>
-						{this.props.community.communityName}
+						r/{this.props.community.communityName}
 					</button>
 				</div>
 

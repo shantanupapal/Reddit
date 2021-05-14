@@ -14,6 +14,7 @@ import MyCommunities from "./MyCommunities/MyCommunities";
 import ViewCommunity from "./MyCommunities/MyCommunityProfile";
 import Dashboard from "./Dashboard";
 import MyCommunityAnalytics from "./MyCommunities/MyCommunityAnalytics";
+import ViewProfile from "./ViewProfile/ViewProfile";
 
 const Main = () => {
   return (
@@ -32,6 +33,7 @@ const Main = () => {
       <Route exact path="/MyCommunities" component={MyCommunities} />
       <Route exact path="/viewCommunityProfile" component={ViewCommunity} />
       <Route exact path="/Dashboard" component={Dashboard} />
+      <Route exact path="/ViewProfile/:userid" component={ViewProfile} />
       <Route
         exact
         path="/MyCommunityAnalytics"
