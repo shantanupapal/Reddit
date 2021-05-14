@@ -385,6 +385,9 @@ class AllCommunities extends Component {
 											<Link
 												className="text-decoration-none text-dark h4"
 												to={`/community/:${value.communityName}`}
+												onClick={() => {
+													localStorage.setItem("communityid", value._id);
+												}}
 											>
 												<strong>r/{value.communityName}</strong>
 											</Link>
