@@ -23,7 +23,7 @@ let addPost = async (msg, callback) => {
 			title: msg.title,
 			body: msg.body,
 			votes: 0,
-			link: "",
+			link: msg.link,
 			image: "",
 			comments: [],
 			createdBy: msg.user_id,
