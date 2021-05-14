@@ -190,6 +190,19 @@ class Posts extends Component {
 	constructor() {
 		super();
 		this.state = { postTitle: "", postBody: "", postLink: "", postImage: null };
+
+		this.state = {
+			postTitle: "",
+			postBody: "",
+			postLink: "",
+			postImage: null,
+			posts: [],
+			asc: false,
+		};
+	}
+
+	componentDidMount() {
+		this.setState({ posts: this.props.posts });
 	}
 	validURL = (str) => {
 		var pattern = new RegExp(
@@ -280,10 +293,122 @@ class Posts extends Component {
 	onFileChangeHandler = (e) => {
 		this.setState({ postImage: e.target.files[0] });
 	};
+	// sortByVotes = () => {};
+	// sortByComments = () => {};
+	// sortByDate = () => {};
+	sortByVotes = () => {
+		this.setState({ asc: !this.state.asc });
+		let posts = this.state.posts;
+		if (this.state.asc === false) {
+			posts.sort((a, b) => {
+				if (a.votes > b.votes) {
+					return -1;
+				}
+				if (a.votes < b.votes) {
+					return 1;
+				}
+				return 0;
+			});
+			this.setState({
+				posts: posts,
+			});
+		} else {
+			posts.sort((a, b) => {
+				if (a.votes < b.votes) {
+					return -1;
+				}
+				if (a.votes > b.votes) {
+					return 1;
+				}
+				return 0;
+			});
+			this.setState({
+				posts: posts,
+			});
+		}
+	};
+
+	sortByDate = () => {
+		this.setState({ asc: !this.state.asc });
+		let date = this.state.posts;
+		if (this.state.asc === false) {
+			date.sort((a, b) => {
+				if (a.createdAt > b.createdAt) {
+					return -1;
+				}
+				if (a.createdAt < b.createdAt) {
+					return 1;
+				}
+				return 0;
+			});
+			this.setState({
+				posts: date,
+			});
+		} else {
+			date.sort((a, b) => {
+				if (a.createdAt < b.createdAt) {
+					return -1;
+				}
+				if (a.createdAt > b.createdAt) {
+					return 1;
+				}
+				return 0;
+			});
+			this.setState({
+				posts: date,
+			});
+		}
+	};
+
+	sortByComments = () => {
+		this.setState({ asc: !this.state.asc });
+		let comments = this.state.posts;
+		if (this.state.asc === false) {
+			comments.sort((a, b) => {
+				if (a.comments > b.comments) {
+					return -1;
+				}
+				if (a.comments < b.comments) {
+					return 1;
+				}
+				return 0;
+			});
+			this.setState({
+				posts: comments,
+			});
+		} else {
+			comments.sort((a, b) => {
+				if (a.comments < b.comments) {
+					return -1;
+				}
+				if (a.comments > b.comments) {
+					return 1;
+				}
+				return 0;
+			});
+			this.setState({
+				posts: comments,
+			});
+		}
+	};
 	render() {
 		console.log(this.props);
 		return (
 			<div className="">
+				<div className="row">
+					<div className="col-lg-12">
+						<span>Sort By:</span>
+						<button className="btn btn-link" onClick={this.sortByVotes}>
+							Votes
+						</button>
+						<button className="btn btn-link" onClick={this.sortByComments}>
+							Comments
+						</button>
+						<button className="btn btn-link" onClick={this.sortByDate}>
+							Upload Date
+						</button>
+					</div>
+				</div>
 				{this.props.checkCommunityUserStatus() === 1 ? (
 					<div className="col-lg-12 border m-2 pt-2 pb-4">
 						<span>
@@ -329,8 +454,8 @@ class Posts extends Component {
 
 				<div className="row">
 					<div className="col-lg-12">
-						{this.props.posts &&
-							this.props.posts.map((post) => {
+						{this.state.posts &&
+							this.state.posts.map((post) => {
 								return (
 									<SinglePost
 										getCommunityData={this.props.getCommunityData}
