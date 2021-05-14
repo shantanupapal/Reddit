@@ -9,23 +9,112 @@ import user_image from "./subreddit.jpg";
 export class Posts extends Component {
     state = {
         posts: posts,
+        asc: false,
     };
 
+    componentWillReceiveProps = () => {};
+
     sortByVotes = () => {
-        posts.sort((a, b) => {
-            if (a.votes < b.votes) {
-                return -1;
-            }
-            if (a.votes > b.votes) {
-                return 1;
-            }
-            return 0;
-        });
-        this.setState({
-            ...posts,
-            posts: posts,
-        });
+        this.setState({ asc: !this.state.asc });
+        if (this.state.asc === false) {
+            posts.sort((a, b) => {
+                if (a.votes > b.votes) {
+                    return -1;
+                }
+                if (a.votes < b.votes) {
+                    return 1;
+                }
+                return 0;
+            });
+            this.setState({
+                ...posts,
+                posts: posts,
+            });
+        } else {
+            posts.sort((a, b) => {
+                if (a.votes < b.votes) {
+                    return -1;
+                }
+                if (a.votes > b.votes) {
+                    return 1;
+                }
+                return 0;
+            });
+            this.setState({
+                ...posts,
+                posts: posts,
+            });
+        }
     };
+
+    sortByDate = () => {
+        this.setState({ asc: !this.state.asc });
+        let date = this.state.posts;
+        if (this.state.asc === false) {
+            date.sort((a, b) => {
+                if (a.createdAt > b.createdAt) {
+                    return -1;
+                }
+                if (a.createdAt < b.createdAt) {
+                    return 1;
+                }
+                return 0;
+            });
+            this.setState({
+                ...posts,
+                posts: date,
+            });
+        } else {
+            date.sort((a, b) => {
+                if (a.createdAt < b.createdAt) {
+                    return -1;
+                }
+                if (a.createdAt > b.createdAt) {
+                    return 1;
+                }
+                return 0;
+            });
+            this.setState({
+                ...posts,
+                posts: date,
+            });
+        }
+    };
+
+    sortByComments = () => {
+        this.setState({ asc: !this.state.asc });
+        let comments = this.state.posts;
+        if (this.state.asc === false) {
+            comments.sort((a, b) => {
+                if (a.comments > b.comments) {
+                    return -1;
+                }
+                if (a.comments < b.comments) {
+                    return 1;
+                }
+                return 0;
+            });
+            this.setState({
+                ...posts,
+                posts: comments,
+            });
+        } else {
+            comments.sort((a, b) => {
+                if (a.comments < b.comments) {
+                    return -1;
+                }
+                if (a.comments > b.comments) {
+                    return 1;
+                }
+                return 0;
+            });
+            this.setState({
+                ...posts,
+                posts: comments,
+            });
+        }
+    };
+
     render() {
         return (
             <>
@@ -42,10 +131,20 @@ export class Posts extends Component {
                         >
                             <span className="db-sort-types">Most Upvotes</span>
                         </div>
-                        <div className="filter-element hoverable">
+                        <div
+                            className="filter-element hoverable "
+                            onClick={() => {
+                                this.sortByComments();
+                            }}
+                        >
                             <span className="db-sort-types">Most Comments</span>
                         </div>
-                        <div className="filter-element hoverable">
+                        <div
+                            className="filter-element hoverable"
+                            onClick={() => {
+                                this.sortByDate();
+                            }}
+                        >
                             <span className="db-sort-types">Created at</span>
                         </div>
                     </div>
