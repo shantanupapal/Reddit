@@ -40,6 +40,23 @@ router.post("/add_comment", async (req, res) => {
 	});
 });
 
+router.post("/vote", async (req, res) => {
+	let msg = req.body;
+	msg.route = "vote";
+
+	kafka.make_request("communityHome1", msg, function (err, results) {
+		if (err) {
+			msg.error = err.data;
+			logger.error(msg);
+			return res.status(err.status).send(err.data);
+		} else if (results) {
+			msg.status = results.status;
+			logger.info(msg);
+			return res.status(results.status).send(results.data);
+		}
+	});
+});
+
 router.post("/add_post", async (req, res) => {
 	let msg = req.body;
 	msg.route = "add_post_community";

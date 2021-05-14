@@ -27,7 +27,8 @@ class SinglePost extends Component {
 				post_id: this.props.post._id,
 			})
 			.then((response) => {
-				this.props.history.push("/community/" + communityName);
+				// this.props.history.push("/community/" + communityName);
+				this.props.getCommunityData();
 				console.log("Actions::response from vote", response.data);
 			})
 			.catch((error) => {
@@ -48,7 +49,8 @@ class SinglePost extends Component {
 				post_id: this.props.post._id,
 			})
 			.then((response) => {
-				this.props.history.push("/community/" + communityName);
+				// this.props.history.push("/community/" + communityName);
+				this.props.getCommunityData();
 				console.log("Actions::response from vote", response.data);
 			})
 			.catch((error) => {
@@ -77,13 +79,13 @@ class SinglePost extends Component {
 				content: this.state.comment,
 			})
 			.then((response) => {
-				this.props.history.push("/community/" + communityName);
+				// this.props.history.push("/community/" + communityName);
+				this.props.getCommunityData();
 				console.log("Actions::response from add comment on post", response.data);
 			})
 			.catch((error) => {
 				console.log(error);
 			});
-		// alert("Api call to add comment to Post");
 		this.setState({ showReplyToPostModal: false });
 	};
 	render() {
@@ -152,6 +154,7 @@ class SinglePost extends Component {
 							this.props.post.comments.map((comment) => {
 								return (
 									<Comment
+										getCommunityData={this.props.getCommunityData}
 										key={comment._id}
 										checkCommunityUserStatus={this.props.checkCommunityUserStatus}
 										comment={comment}
@@ -195,6 +198,7 @@ class Posts extends Component {
 				link: this.state.postLink,
 			})
 			.then((response) => {
+				this.props.getCommunityData();
 				// this.props.history.push("/community/" + communityName);
 				// let photoData = new FormData();
 				// photoData.append("file", this.state.postImage);
@@ -278,6 +282,7 @@ class Posts extends Component {
 							this.props.posts.map((post) => {
 								return (
 									<SinglePost
+										getCommunityData={this.props.getCommunityData}
 										key={post._id}
 										checkCommunityUserStatus={this.props.checkCommunityUserStatus}
 										post={post}
@@ -297,9 +302,6 @@ class Rules extends Component {
 		super();
 		this.state = { communityData: {} };
 	}
-	createPost = () => {
-		alert("Create Post");
-	};
 	render() {
 		console.log(this.props);
 		return (
@@ -323,9 +325,7 @@ class Users extends Component {
 		super();
 		this.state = { communityData: {} };
 	}
-	createPost = () => {
-		alert("Create Post");
-	};
+
 	render() {
 		console.log(this.props);
 		return (
@@ -364,7 +364,8 @@ class Comment extends Component {
 				post_id: null,
 			})
 			.then((response) => {
-				this.props.history.push("/community/" + communityName);
+				// this.props.history.push("/community/" + communityName);
+				this.props.getCommunityData();
 				console.log("Actions::response from vote", response.data);
 			})
 			.catch((error) => {
@@ -385,7 +386,8 @@ class Comment extends Component {
 				post_id: null,
 			})
 			.then((response) => {
-				this.props.history.push("/community/" + communityName);
+				// this.props.history.push("/community/" + communityName);
+				this.props.getCommunityData();
 				console.log("Actions::response from vote", response.data);
 			})
 			.catch((error) => {
@@ -414,13 +416,13 @@ class Comment extends Component {
 				content: this.state.comment,
 			})
 			.then((response) => {
-				this.props.history.push("/community/" + communityName);
+				// this.props.history.push("/community/" + communityName);
+				this.props.getCommunityData();
 				console.log("Actions::response from add comment on post", response.data);
 			})
 			.catch((error) => {
 				console.log(error);
 			});
-		alert("Api call to add comment to Comment");
 		this.setState({ showModal: false });
 	};
 	render() {
@@ -506,50 +508,6 @@ class CommunityHome extends Component {
 	}
 	componentDidMount = () => {
 		this.getCommunityData();
-		// let communityName = this.props.match.params.name;
-		// console.log("communityName", communityName);
-		// const communityData = {
-		// 	communityName: "Memes",
-		// 	description: "Community for memes",
-		// 	images: "https://homepages.cae.wisc.edu/~ece533/images/airplane.png",
-		// 	rules: [{ title: "Rule 1", desc: "Rule 1" }],
-		// 	communityMembers: [{ _id: 1, userName: "PG", email: "pg@hotmail.com" }],
-		// 	posts: [
-		// 		{
-		// 			title: "Post1",
-		// 			body: "Post 1 body",
-		// 			votes: 5,
-		// 			link: "https://homepages.cae.wisc.edu/~ece533/images/airplane.png",
-		// 			image: "https://homepages.cae.wisc.edu/~ece533/images/airplane.png",
-		// 			comments: [
-		// 				{
-		// 					content: "Comment 1",
-		// 					votes: 4,
-		// 					commentedBy: { _id: 1, userName: "PG", email: "pg@hotmail.com" },
-		// 					commentedAt: "5/5/2021",
-		// 					nestedComments: [
-		// 						{
-		// 							content: "Nested Comment 1",
-		// 							votes: 2,
-		// 							commentedBy: { _id: 1, userName: "PG", email: "pg@hotmail.com" },
-		// 							commentedAt: "6/5/2021",
-		// 							nestedComments: [{}],
-		// 						},
-		// 					],
-		// 				},
-		// 			],
-		// 			createdBy: { _id: 1, userName: "PG", email: "pg@hotmail.com" },
-		// 			createdAt: "6/5/2021",
-		// 		},
-		// 	],
-		// 	topics: ["Memes", "Meme"],
-		// 	votes: 5,
-		// 	createdBy: { _id: 1, userName: "PG", email: "pg@hotmail.com" },
-		// 	createdAt: "6/5/2021",
-		// };
-		// this.setState({
-		// 	communityData: communityData,
-		// });
 	};
 	getCommunityData = () => {
 		let communityName = this.props.match.params.name;
@@ -591,7 +549,9 @@ class CommunityHome extends Component {
 				acceptStatus: 0,
 			})
 			.then((response) => {
-				this.props.history.push("/community/" + communityName);
+				// this.props.history.push("/community/" + communityName);
+				console.log("join community");
+				this.getCommunityData();
 				console.log("Actions::response from join community", response.data);
 			})
 			.catch((error) => {
@@ -609,7 +569,9 @@ class CommunityHome extends Component {
 				acceptStatus: 3,
 			})
 			.then((response) => {
-				this.props.history.push("/community/" + communityName);
+				// this.props.history.push("/community/" + communityName);
+				console.log("leave community");
+				this.getCommunityData();
 				console.log("Actions::response from join community", response.data);
 			})
 			.catch((error) => {
@@ -708,6 +670,7 @@ class CommunityHome extends Component {
 									path="/community/:name"
 									component={(props) => (
 										<Posts
+											getCommunityData={this.getCommunityData}
 											checkCommunityUserStatus={this.checkCommunityUserStatus}
 											posts={this.state.communityData.posts}
 											{...props}
