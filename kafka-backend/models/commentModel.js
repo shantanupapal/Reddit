@@ -8,6 +8,7 @@ const commentSchema = new Schema(
 		commentedBy: { type: mongoose.Schema.Types.ObjectId, ref: "user" },
 		commentedAt: { type: Date, default: Date.now },
 		nestedComments: [{ type: Schema.Types.ObjectId, ref: "comment" }],
+		communityId: { type: mongoose.Schema.Types.ObjectId, ref: "community" },
 	},
 	{
 		versionKey: false,
