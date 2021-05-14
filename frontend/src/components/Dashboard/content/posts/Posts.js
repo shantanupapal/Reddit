@@ -409,7 +409,7 @@ export class Posts extends Component {
 	};
 	render() {
 		const posts = [];
-		if (this.state && this.state.posts) {
+		if (this.state && this.state.posts && this.state.posts.length > 0) {
 			console.log(this.state.posts);
 			const allposts = this.state.posts;
 			for (let index = 0; index < allposts.length; index++) {
@@ -539,6 +539,8 @@ export class Posts extends Component {
 					</>
 				);
 			}
+		} else {
+			posts.push(<h2 className="text-secondary">No Posts Available</h2>);
 		}
 		return (
 			<>
