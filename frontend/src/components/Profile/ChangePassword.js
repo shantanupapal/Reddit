@@ -32,9 +32,8 @@ class ChangePassword extends Component {
 				password: this.state.password,
 			};
 			axios.defaults.withCredentials = true;
-			axios.defaults.headers.common["authorization"] = localStorage.getItem(
-				"token"
-			);
+			axios.defaults.headers.common["authorization"] =
+				localStorage.getItem("token");
 			axios
 				.post(`${backendURI}/api/profile/changepassword`, resetData)
 				.then((response) => {
@@ -64,6 +63,10 @@ class ChangePassword extends Component {
 	render() {
 		let redirectVar = null;
 		let displayMessage = "";
+		if (!localStorage.getItem("token")) {
+			redirectVar = <Redirect to="/Login" />;
+		}
+
 		if (this.state.redirectFlag) {
 			redirectVar = <Redirect to="/Login" />;
 		}
