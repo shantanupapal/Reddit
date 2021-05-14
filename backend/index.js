@@ -12,7 +12,7 @@ const chat = require("./routes/chat");
 const invitation = require("./routes/invitation");
 
 const communityhome = require("./routes/communityHome");
-const communityhome1 = require("./routes/communityhome1");
+const communityhome1 = require("./routes/communityHome1");
 const imageUpload = require("./routes/uploads");
 const getImage = require("./routes/images");
 

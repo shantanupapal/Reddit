@@ -1,4 +1,7 @@
 "use strict";
+
+const Post = require("../../models/postModel");
+const Comment = require("../../models/commentModel");
 const Community = require("../../models/communityModel");
 const { STATUS_CODE, MESSAGES } = require("../../utils/constants");
 
@@ -11,7 +14,11 @@ let getCommunity = async (msg, callback) => {
 		// 	path: "communityMembers._id",
 		// });
 		// console.log("communities data is: ", communities);
-		let community = await Community.find({ communityName: msg.communityName }).populate("communityMembers");
+		let community = await Community.find({ communityName: msg.communityName })
+			.populate({ path: "communityMembers._id" })
+			.populate({ path: "createdBy" })
+			.populate({ path: "posts", populate: { path: "comments", populate: { path: "nestedComments" } } });
+
 		console.log("community data is: ", community);
 		if (community && community.length > 0) {
 			response.status = STATUS_CODE.SUCCESS;

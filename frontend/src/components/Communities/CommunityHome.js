@@ -14,10 +14,46 @@ class SinglePost extends Component {
 		this.state = { comment: "", showReplyToPostModal: false };
 	}
 	downvotePost = () => {
-		alert("downvote Post");
+		let communityName = this.props.match.params.name;
+		let communityId = localStorage.getItem("communityid");
+		let user_id = localStorage.getItem("userid");
+		axios
+			.post(`${backendURI}/api/communityhome1/vote/`, {
+				community_id: communityId,
+				user_id: user_id,
+				downvote: true,
+				upvote: false,
+				comment_id: null,
+				post_id: this.props.post._id,
+			})
+			.then((response) => {
+				this.props.history.push("/community/" + communityName);
+				console.log("Actions::response from vote", response.data);
+			})
+			.catch((error) => {
+				console.log(error);
+			});
 	};
 	upvotePost = () => {
-		alert("upvote Post");
+		let communityName = this.props.match.params.name;
+		let communityId = localStorage.getItem("communityid");
+		let user_id = localStorage.getItem("userid");
+		axios
+			.post(`${backendURI}/api/communityhome1/vote/`, {
+				community_id: communityId,
+				user_id: user_id,
+				downvote: false,
+				upvote: true,
+				comment_id: null,
+				post_id: this.props.post._id,
+			})
+			.then((response) => {
+				this.props.history.push("/community/" + communityName);
+				console.log("Actions::response from vote", response.data);
+			})
+			.catch((error) => {
+				console.log(error);
+			});
 	};
 	replyToPost = () => {
 		this.setState({ showReplyToPostModal: true });
@@ -29,7 +65,25 @@ class SinglePost extends Component {
 		this.setState({ comment: e.target.value });
 	};
 	commentOnPost = () => {
-		alert("Api call to add comment to Post");
+		let communityName = this.props.match.params.name;
+		let communityId = localStorage.getItem("communityid");
+		let user_id = localStorage.getItem("userid");
+		axios
+			.post(`${backendURI}/api/communityhome1/add_comment/`, {
+				community_id: communityId,
+				user_id: user_id,
+				post_id: this.props.post._id,
+				comment_id: null,
+				content: this.state.comment,
+			})
+			.then((response) => {
+				this.props.history.push("/community/" + communityName);
+				console.log("Actions::response from add comment on post", response.data);
+			})
+			.catch((error) => {
+				console.log(error);
+			});
+		// alert("Api call to add comment to Post");
 		this.setState({ showReplyToPostModal: false });
 	};
 	render() {
@@ -68,7 +122,7 @@ class SinglePost extends Component {
 					<div className="">
 						<span className="text-xl font-semibold">{this.props.post.title} </span>
 						<span className="float-right">
-							{this.props.checkCommunityUserStatus() ? (
+							{this.props.checkCommunityUserStatus() === 1 ? (
 								<button className="btn btn-link" onClick={this.replyToPost}>
 									Reply
 								</button>
@@ -98,9 +152,11 @@ class SinglePost extends Component {
 							this.props.post.comments.map((comment) => {
 								return (
 									<Comment
+										key={comment._id}
 										checkCommunityUserStatus={this.props.checkCommunityUserStatus}
 										comment={comment}
 										nestedComment={false}
+										{...this.props}
 									/>
 								);
 							})}
@@ -117,7 +173,45 @@ class Posts extends Component {
 		this.state = { postTitle: null, postBody: null, postLink: null, postImage: null };
 	}
 	createPost = () => {
-		alert("Create Post");
+		let communityName = this.props.match.params.name;
+		let communityId = localStorage.getItem("communityid");
+		let user_id = localStorage.getItem("userid");
+		let formData = new FormData();
+		if (this.state.postImage !== null) {
+			formData.append("file", this.state.postImage);
+		}
+		formData.append("community_id", communityId);
+		formData.append("user_id", user_id);
+		formData.append("title", this.state.postTitle);
+		formData.append("body", this.state.postBody);
+		formData.append("link", this.state.postLink);
+
+		axios
+			.post(`${backendURI}/api/communityhome1/add_post/`, {
+				community_id: communityId,
+				user_id: user_id,
+				title: this.state.postTitle,
+				body: this.state.postBody,
+				link: this.state.postLink,
+			})
+			.then((response) => {
+				// this.props.history.push("/community/" + communityName);
+				// let photoData = new FormData();
+				// photoData.append("file", this.state.postImage);
+				// axios
+				// 	.post(`${backendURI}/api/communityhome1/add_photo_to_post/`, photoData)
+				// 	.then((response) => {
+				// 		console.log("Status Code : ", response.status);
+				// 		console.log("resp: ", response);
+				// 	})
+				// 	.catch((error) => {
+				// 		console.log(error);
+				// 	});
+				// console.log("Actions::response from join community", response.data);
+			})
+			.catch((error) => {
+				console.log(error);
+			});
 	};
 	changePostTitle = (e) => {
 		this.setState({ postTitle: e.target.value });
@@ -135,7 +229,7 @@ class Posts extends Component {
 		console.log(this.props);
 		return (
 			<div className="">
-				{this.props.checkCommunityUserStatus() ? (
+				{this.props.checkCommunityUserStatus() === 1 ? (
 					<div className="col-lg-12 border m-2 pt-2 pb-4">
 						<span>
 							<input
@@ -151,7 +245,7 @@ class Posts extends Component {
 								name="postBody"
 								id="postBody"
 								type="text"
-								placeholder="New Post Title"
+								placeholder="New Post Body"
 								className="form-control my-3 p-4"
 								required
 								onChange={this.changePostBody}
@@ -184,8 +278,10 @@ class Posts extends Component {
 							this.props.posts.map((post) => {
 								return (
 									<SinglePost
+										key={post._id}
 										checkCommunityUserStatus={this.props.checkCommunityUserStatus}
 										post={post}
+										{...this.props}
 									/>
 								);
 							})}
@@ -237,9 +333,9 @@ class Users extends Component {
 				{this.props.users &&
 					this.props.users.map((user) => {
 						return (
-							<div className="border p-2">
+							<div key={user._id._id} className="border p-2">
 								<li>
-									{user.userName} - {user.email}
+									{user._id.userName} - {user._id.email}
 								</li>
 							</div>
 						);
@@ -255,10 +351,46 @@ class Comment extends Component {
 		this.state = { showModal: false, comment: "" };
 	}
 	upvoteComment = () => {
-		alert("Upvote Comment");
+		let communityName = this.props.match.params.name;
+		let communityId = localStorage.getItem("communityid");
+		let user_id = localStorage.getItem("userid");
+		axios
+			.post(`${backendURI}/api/communityhome1/vote/`, {
+				community_id: communityId,
+				user_id: user_id,
+				downvote: false,
+				upvote: true,
+				comment_id: this.props.comment._id,
+				post_id: null,
+			})
+			.then((response) => {
+				this.props.history.push("/community/" + communityName);
+				console.log("Actions::response from vote", response.data);
+			})
+			.catch((error) => {
+				console.log(error);
+			});
 	};
 	downvoteComment = () => {
-		alert("Downvote Comment");
+		let communityName = this.props.match.params.name;
+		let communityId = localStorage.getItem("communityid");
+		let user_id = localStorage.getItem("userid");
+		axios
+			.post(`${backendURI}/api/communityhome1/vote/`, {
+				community_id: communityId,
+				user_id: user_id,
+				downvote: true,
+				upvote: false,
+				comment_id: this.props.comment._id,
+				post_id: null,
+			})
+			.then((response) => {
+				this.props.history.push("/community/" + communityName);
+				console.log("Actions::response from vote", response.data);
+			})
+			.catch((error) => {
+				console.log(error);
+			});
 	};
 	replyToComment = () => {
 		this.setState({ showModal: true });
@@ -270,6 +402,24 @@ class Comment extends Component {
 		this.setState({ comment: e.target.value });
 	};
 	submitComment = () => {
+		let communityName = this.props.match.params.name;
+		let communityId = localStorage.getItem("communityid");
+		let user_id = localStorage.getItem("userid");
+		axios
+			.post(`${backendURI}/api/communityhome1/add_comment/`, {
+				community_id: communityId,
+				user_id: user_id,
+				post_id: null,
+				comment_id: this.props.comment._id,
+				content: this.state.comment,
+			})
+			.then((response) => {
+				this.props.history.push("/community/" + communityName);
+				console.log("Actions::response from add comment on post", response.data);
+			})
+			.catch((error) => {
+				console.log(error);
+			});
 		alert("Api call to add comment to Comment");
 		this.setState({ showModal: false });
 	};
@@ -311,7 +461,7 @@ class Comment extends Component {
 					)}
 					{this.props.nestedComment === false ? (
 						<span className="float-right">
-							{this.props.checkCommunityUserStatus() ? (
+							{this.props.checkCommunityUserStatus() === 1 ? (
 								<button className="btn btn-link" onClick={this.replyToComment}>
 									Reply
 								</button>
@@ -337,6 +487,7 @@ class Comment extends Component {
 					this.props.comment.nestedComments.map((nestedComment) => {
 						return (
 							<Comment
+								key={nestedComment._id}
 								checkCommunityUserStatus={this.props.checkCommunityUserStatus}
 								comment={nestedComment}
 								nestedComment={true}
@@ -355,72 +506,74 @@ class CommunityHome extends Component {
 	}
 	componentDidMount = () => {
 		this.getCommunityData();
-		let communityName = this.props.match.params.name;
-		console.log("communityName", communityName);
-		const communityData = {
-			communityName: "Memes",
-			description: "Community for memes",
-			images: "https://homepages.cae.wisc.edu/~ece533/images/airplane.png",
-			rules: [{ title: "Rule 1", desc: "Rule 1" }],
-			communityMembers: [{ _id: 1, userName: "PG", email: "pg@hotmail.com" }],
-			posts: [
-				{
-					title: "Post1",
-					body: "Post 1 body",
-					votes: 5,
-					link: "https://homepages.cae.wisc.edu/~ece533/images/airplane.png",
-					image: "https://homepages.cae.wisc.edu/~ece533/images/airplane.png",
-					comments: [
-						{
-							content: "Comment 1",
-							votes: 4,
-							commentedBy: { _id: 1, userName: "PG", email: "pg@hotmail.com" },
-							commentedAt: "5/5/2021",
-							nestedComments: [
-								{
-									content: "Nested Comment 1",
-									votes: 2,
-									commentedBy: { _id: 1, userName: "PG", email: "pg@hotmail.com" },
-									commentedAt: "6/5/2021",
-									nestedComments: [{}],
-								},
-							],
-						},
-					],
-					createdBy: { _id: 1, userName: "PG", email: "pg@hotmail.com" },
-					createdAt: "6/5/2021",
-				},
-			],
-			topics: ["Memes", "Meme"],
-			votes: 5,
-			createdBy: { _id: 1, userName: "PG", email: "pg@hotmail.com" },
-			createdAt: "6/5/2021",
-		};
-		this.setState({
-			communityData: communityData,
-		});
+		// let communityName = this.props.match.params.name;
+		// console.log("communityName", communityName);
+		// const communityData = {
+		// 	communityName: "Memes",
+		// 	description: "Community for memes",
+		// 	images: "https://homepages.cae.wisc.edu/~ece533/images/airplane.png",
+		// 	rules: [{ title: "Rule 1", desc: "Rule 1" }],
+		// 	communityMembers: [{ _id: 1, userName: "PG", email: "pg@hotmail.com" }],
+		// 	posts: [
+		// 		{
+		// 			title: "Post1",
+		// 			body: "Post 1 body",
+		// 			votes: 5,
+		// 			link: "https://homepages.cae.wisc.edu/~ece533/images/airplane.png",
+		// 			image: "https://homepages.cae.wisc.edu/~ece533/images/airplane.png",
+		// 			comments: [
+		// 				{
+		// 					content: "Comment 1",
+		// 					votes: 4,
+		// 					commentedBy: { _id: 1, userName: "PG", email: "pg@hotmail.com" },
+		// 					commentedAt: "5/5/2021",
+		// 					nestedComments: [
+		// 						{
+		// 							content: "Nested Comment 1",
+		// 							votes: 2,
+		// 							commentedBy: { _id: 1, userName: "PG", email: "pg@hotmail.com" },
+		// 							commentedAt: "6/5/2021",
+		// 							nestedComments: [{}],
+		// 						},
+		// 					],
+		// 				},
+		// 			],
+		// 			createdBy: { _id: 1, userName: "PG", email: "pg@hotmail.com" },
+		// 			createdAt: "6/5/2021",
+		// 		},
+		// 	],
+		// 	topics: ["Memes", "Meme"],
+		// 	votes: 5,
+		// 	createdBy: { _id: 1, userName: "PG", email: "pg@hotmail.com" },
+		// 	createdAt: "6/5/2021",
+		// };
+		// this.setState({
+		// 	communityData: communityData,
+		// });
 	};
 	getCommunityData = () => {
+		let communityName = this.props.match.params.name;
 		axios
-			.get(`${backendURI}/api/communityhome/getCommunity/painting`)
+			.get(`${backendURI}/api/communityhome/getCommunity/${communityName}`)
 			.then((response) => {
+				this.setState({
+					communityData: response.data[0],
+				});
 				console.log("Actions::response from getCommunity", response.data);
+				localStorage.setItem("communityid", response.data[0]._id);
 			})
 			.catch((error) => {
 				console.log(error);
 			});
-		this.setState({
-			posts: ["Sameple Post A", "Sample Post B"],
-		});
 	};
 	checkCommunityUserStatus = () => {
-		return true;
+		// return 1;
 		let acceptStatus = null;
-		let loggedInUserId = localStorage.getItem("user_id");
+		let loggedInUserId = localStorage.getItem("userid");
 		if (this.state.communityData.communityMembers) {
 			this.state.communityData.communityMembers.map((member) => {
-				if (member._id === loggedInUserId) {
-					acceptStatus = member.status;
+				if (member._id._id === loggedInUserId) {
+					acceptStatus = member.acceptStatus;
 				}
 			});
 		}
@@ -428,10 +581,40 @@ class CommunityHome extends Component {
 	};
 
 	joinCommunity = () => {
-		alert("Join Community");
+		let communityName = this.props.match.params.name;
+		let communityId = localStorage.getItem("communityid");
+		let user_id = localStorage.getItem("userid");
+		axios
+			.post(`${backendURI}/api/communityhome1/join_leave/`, {
+				community_id: communityId,
+				user_id: user_id,
+				acceptStatus: 0,
+			})
+			.then((response) => {
+				this.props.history.push("/community/" + communityName);
+				console.log("Actions::response from join community", response.data);
+			})
+			.catch((error) => {
+				console.log(error);
+			});
 	};
 	leaveCommunity = () => {
-		alert("Leave Community");
+		let communityName = this.props.match.params.name;
+		let communityId = localStorage.getItem("communityid");
+		let user_id = localStorage.getItem("userid");
+		axios
+			.post(`${backendURI}/api/communityhome1/join_leave/`, {
+				communityId: communityId,
+				user_id: user_id,
+				acceptStatus: 3,
+			})
+			.then((response) => {
+				this.props.history.push("/community/" + communityName);
+				console.log("Actions::response from join community", response.data);
+			})
+			.catch((error) => {
+				console.log(error);
+			});
 	};
 	render() {
 		let communityName = this.props.match.params.name;
@@ -450,19 +633,27 @@ class CommunityHome extends Component {
 							<div className="flex justify-between">
 								<div className="text-3xl">{this.state.communityData.communityName}</div>
 								<div className="float-right">
-									{this.checkCommunityUserStatus() === null ? (
+									{this.checkCommunityUserStatus() === null ||
+									this.checkCommunityUserStatus() === 3 ? (
 										<Button onClick={this.joinCommunity} variant="success">
 											Join
 										</Button>
-									) : this.checkCommunityUserStatus() === true ? (
+									) : null}
+									{this.checkCommunityUserStatus() === 1 ? (
 										<Button onClick={this.leaveCommunity} variant="danger">
 											Leave
 										</Button>
-									) : (
+									) : null}
+									{this.checkCommunityUserStatus() === 0 ? (
 										<Button disabled variant="warning">
 											Pending
 										</Button>
-									)}
+									) : null}
+									{this.checkCommunityUserStatus() === 2 ? (
+										<Button disabled variant="danger">
+											Rejected
+										</Button>
+									) : null}
 								</div>
 							</div>
 							<div className="font-extralight text-lg">{this.state.communityData.description}</div>
