@@ -21,6 +21,7 @@ let getCommunityDetailsById = async (msg, callback) => {
           description: communityDetails[i].description,
           totalPost: communityDetails[i].posts.length,
           joinedUsers: communityDetails[i].communityMembers.length,
+          communityImage: communityDetails[i].communityImage,
           rules: communityDetails[i].rules,
           createdAt: communityDetails[i].createdAt,
         };

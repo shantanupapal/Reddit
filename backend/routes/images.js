@@ -21,4 +21,22 @@ router.get("/:user_image", (req, res) => {
   }
 });
 
+router.get("/com_image/:com_image", (req, res) => {
+  console.log("inside get com_image");
+  console.log(req.params);
+  var image =
+    path.join(__dirname, "..") + "/public/comImage/" + req.params.com_image;
+
+  console.log(image);
+  let isPresent = fs.existsSync(image);
+  console.log("isPresent", isPresent);
+  if (fs.existsSync(image)) {
+    res.sendFile(image);
+  } else {
+    res.sendFile(
+      path.join(__dirname, "..") + "/public/comImage/default_logo.png"
+    );
+  }
+});
+
 module.exports = router;
