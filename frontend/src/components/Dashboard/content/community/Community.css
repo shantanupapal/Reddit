@@ -58,3 +58,13 @@
     justify-content: space-between;
     margin: 15px 0px;
 }
+
+.comm-link:hover {
+    text-decoration: none;
+    /* color: black; */
+}
+
+.comm-link {
+    text-decoration: none;
+    color: black;
+}
