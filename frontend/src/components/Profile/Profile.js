@@ -1,5 +1,6 @@
 "use strict";
 import React, { Component } from "react";
+import { Redirect } from "react-router";
 import NavbarMain from "../Layout/NavbarMain";
 import axios from "axios";
 import { Multiselect } from "multiselect-react-dropdown";
@@ -129,6 +130,10 @@ class Profile extends Component {
 	};
 
 	render() {
+		let redirectVar = null;
+		if (!localStorage.getItem("token")) {
+			redirectVar = <Redirect to="/Login" />;
+		}
 		var imageSrc;
 		console.log("image", this.state.userImage);
 		if (this.state) {
@@ -136,6 +141,7 @@ class Profile extends Component {
 		}
 		return (
 			<div className="container-fluid">
+				{redirectVar}
 				<NavbarMain />
 				<div className="container mt-5">
 					<div className="row">

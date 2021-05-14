@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import NavbarMain from "../../Layout/NavbarMain";
+import { Redirect } from "react-router";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { getAllCommunities } from "../../../redux/actions/moderationActions";
@@ -13,15 +14,38 @@ import PeopleAltIcon from "@material-ui/icons/PeopleAlt";
 import ShowUsers from "./ShowUsers";
 import JoinedUsers from "./JoinedUsers";
 import "./moderation.css";
+import "../../Layout/searchbar.css";
+import SearchIcon from "@material-ui/icons/Search";
 class Moderation extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
 			userId: localStorage.getItem("userid"),
+			allCommunitiesData: [],
+			search: "",
+			currentPage: 1,
+			itemsPerPage: 5,
 		};
 
 		this.getRequestedUsers = this.getRequestedUsers.bind(this);
+		this.handleClick = this.handleClick.bind(this);
 	}
+
+	handleClick = (e) => {
+		console.log(e);
+		this.setState({
+			currentPage: Number(e),
+		});
+	};
+
+	onSearch = (e) => {
+		this.setState({ search: e.target.value });
+	};
+	onChange = (e) => {
+		this.setState({
+			[e.target.id]: e.target.value,
+		});
+	};
 
 	componentDidMount() {
 		const user = { userid: this.state.userId };
@@ -41,10 +65,69 @@ class Moderation extends Component {
 			: 0;
 	};
 
+	componentWillReceiveProps(nextProps) {
+		console.log("Next props", nextProps.allCommunities);
+		if (nextProps.allCommunities) {
+			this.setState({
+				allCommunitiesData: nextProps.allCommunities,
+			});
+		}
+	}
+
 	render() {
 		let redirectVar = null;
-		let communityData = this.props.allCommunities;
+		if (!localStorage.getItem("token")) {
+			redirectVar = <Redirect to="/Login" />;
+		}
+		let communityData = this.state.allCommunitiesData;
 		console.log("communityData: ", communityData);
+		const { search } = this.state;
+		let searchList = communityData.filter((community) => {
+			return (
+				community.communityName.toLowerCase().indexOf(search.toLowerCase()) !==
+				-1
+			);
+		});
+
+		const currentPage = this.state.currentPage;
+		const itemsPerPage = this.state.itemsPerPage;
+		const indexOfLastTodo = currentPage * itemsPerPage;
+		const indexOfFirstTodo = indexOfLastTodo - itemsPerPage;
+
+		const currentItem =
+			this.state.search && this.state.search.length > 0
+				? searchList
+				: communityData.slice(indexOfFirstTodo, indexOfLastTodo);
+		const pageNumbers = [];
+		console.log("currentItem: ", currentItem);
+
+		for (let i = 1; i <= Math.ceil(communityData.length / itemsPerPage); i++) {
+			pageNumbers.push(i);
+		}
+
+		let renderPageNumbers = null;
+
+		renderPageNumbers = (
+			<nav aria-label="Page navigation example" class="pagebar">
+				<ul class="pagination">
+					{pageNumbers.map((i) => (
+						<li class="page-item">
+							<a
+								key={i}
+								id={i}
+								onClick={() => {
+									this.handleClick(i);
+								}}
+								class="page-link"
+								href="#"
+							>
+								{i}
+							</a>
+						</li>
+					))}
+				</ul>
+			</nav>
+		);
 
 		return (
 			<div className="container-fluid">
@@ -53,9 +136,20 @@ class Moderation extends Component {
 
 				<div className="container">
 					<h4>Community Moderation</h4>
-					{communityData && communityData.length > 0 ? (
+					<div className="searchbar">
+						<label htmlFor="searchbar">
+							<SearchIcon />
+						</label>
+						<input
+							id="search"
+							placeholder="Search"
+							type="search"
+							onChange={this.onSearch}
+						/>
+					</div>
+					{currentItem && currentItem.length > 0 ? (
 						<div>
-							{communityData.map((com) => (
+							{currentItem.map((com) => (
 								<Card className="root">
 									<CardHeader
 										avatar={<Avatar aria-label="recipe">R</Avatar>}
@@ -81,7 +175,8 @@ class Moderation extends Component {
 						<div>
 							<h5 className="text-primary">No communities present</h5>
 						</div>
-					)}
+					)}{" "}
+					<div className="mt-2">{renderPageNumbers}</div>
 				</div>
 			</div>
 		);
