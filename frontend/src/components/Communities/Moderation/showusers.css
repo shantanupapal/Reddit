@@ -1,0 +1,17 @@
+.user-list-pic {
+	width: 50px;
+	height: 50px;
+	border-radius: 50%;
+	border: 1px solid #555;
+	margin-left: 10px;
+	margin-right: 10px;
+}
+
+.user-list {
+	margin-top: 10px;
+}
+
+.list-checkbox {
+	margin-right: 10px;
+	margin-top: 15px;
+}

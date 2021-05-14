@@ -22,3 +22,11 @@ textarea{
 .community-title > div > span:first-of-type{
     font-size: xx-large;
 }
+
+.MuiPaper-elevation1 {
+    box-shadow: 0px 2px 30px -1px rgb(0 0 0 / 20%), 0px 1px 1px 0px rgb(0 0 0 / 14%), 0px 1px 3px 0px rgb(0 0 0 / 12%) !important;
+}
+
+.MuiTypography-body2 > div, p.MuiTypography-body2 {
+    font-size: x-large;
+}

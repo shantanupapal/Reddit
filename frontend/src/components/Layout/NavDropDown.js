@@ -1,10 +1,22 @@
 import React, { Component } from "react";
 import { Dropdown } from "react-bootstrap";
 import { Link } from "react-router-dom";
-//import PersonIcon from "@material-ui/icons/Person";
+import { connect } from "react-redux";
+import { userLogout } from "../../redux/actions/loginAction";
 import icon from "../../images/reddit-icon.png";
 
 class NavDropDown extends Component {
+	constructor() {
+		super();
+		this.state = {
+			userName: localStorage.getItem("userName"),
+		};
+	}
+	handleLogout = () => {
+		console.log("Logging out user!!");
+		window.localStorage.clear();
+		this.props.userLogout();
+	};
 	render() {
 		return (
 			<div>
@@ -19,7 +31,7 @@ class NavDropDown extends Component {
 							alt="icon"
 							style={{ width: "40px", height: "40px" }}
 						/>
-						Username
+						{this.state.userName}
 					</Dropdown.Toggle>
 					<Dropdown.Menu id="dropdown-menu-align-right">
 						<Dropdown.Item>
@@ -33,7 +45,22 @@ class NavDropDown extends Component {
 						</Dropdown.Item>
 
 						<Dropdown.Item>
-							<Link to="/" className="nav-link" style={{ color: "black" }}>
+							<Link
+								to="/ChangePassword"
+								className="nav-link"
+								style={{ color: "black" }}
+							>
+								Change Password
+							</Link>
+						</Dropdown.Item>
+
+						<Dropdown.Item>
+							<Link
+								to="/"
+								className="nav-link"
+								style={{ color: "black" }}
+								onClick={this.handleLogout}
+							>
 								Log Out
 							</Link>
 						</Dropdown.Item>
@@ -44,4 +71,4 @@ class NavDropDown extends Component {
 	}
 }
 
-export default NavDropDown;
+export default connect(null, { userLogout })(NavDropDown);

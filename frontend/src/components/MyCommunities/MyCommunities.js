@@ -1,96 +1,119 @@
 import React, { Component } from "react";
 import NavbarMain from "../Layout/NavbarMain";
-// import clsx from "clsx";
 import Card from "@material-ui/core/Card";
 import CardHeader from "@material-ui/core/CardHeader";
-// import CardMedia from "@material-ui/core/CardMedia";
 import CardContent from "@material-ui/core/CardContent";
 import CardActions from "@material-ui/core/CardActions";
-import Avatar from "@material-ui/core/Avatar";
 import IconButton from "@material-ui/core/IconButton";
 import Typography from "@material-ui/core/Typography";
 import "./MyCommunities.css";
 import person from "../../images/person.svg";
 import post from "../../images/post.svg";
 import { Link } from "react-router-dom";
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
+import logo from "../../images/default_logo.png";
+import { getCommunity } from "../../redux/actions/myCommunityActions";
 
 class MyCommunities extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      communities: [
-        {
-          communityName: "abc",
-          description: "test community",
-          images: ["abc.jpg", "xyz.jpg"],
-          rules: [
-            {
-              title: "rule 1",
-              desc: "desc for rule 1",
-            },
-            {
-              title: "rule 2",
-              desc: "desc for rule 2",
-            },
-          ],
-          communityMembers: [
-            {
-              _id: "12234",
-              acceptStatus: true,
-            },
-            {
-              _id: "23324343",
-              acceptStatus: false,
-            },
-            {
-              _id: "23324asdfsdaf343",
-              acceptStatus: true,
-            },
-          ],
-          posts: [],
-          topics: [],
-          votes: {},
-          createdBy: "12234",
-          createdAt: "12th Feb, 2021",
-        },
-        {
-          communityName: "xyz",
-          description: "test community 1",
-          images: ["abcd.jpg", "xyzw.jpg"],
-          rules: [
-            {
-              title: "rule 21",
-              desc: "desc for rule 21",
-            },
-            {
-              title: "rule 22",
-              desc: "desc for rule 22",
-            },
-          ],
-          communityMembers: [
-            {
-              _id: "12234",
-              acceptStatus: true,
-            },
-            {
-              _id: "23324343",
-              acceptStatus: true,
-            },
-            {
-              _id: "23324asdfsdaf343",
-              acceptStatus: false,
-            },
-          ],
-          posts: [],
-          topics: [],
-          votes: {},
-          createdBy: "12234",
-          createdAt: "13th Feb, 2021",
-        },
-      ],
+      userId: localStorage.getItem("userid"),
+      communities: [],
+      currentPage: 1,
+      itemsPerPage: 5,
     };
+    this.handleClick = this.handleClick.bind(this);
   }
+
+  handleClick(e) {
+    console.log(e);
+    this.setState({
+      currentPage: Number(e),
+    });
+  }
+
+  componentDidMount() {
+    const user = localStorage.getItem("userid");
+    console.log("current user ID: ", user);
+    const data = {
+      user: user,
+    };
+    this.props.getCommunity(data);
+  }
+
+  onChange = (e) => {
+    this.setState({
+      [e.target.id]: e.target.value,
+    });
+  };
+
+  sortBy = () => {
+    if (this.state.sortBy === "Ascending") {
+      let communitiesSort = this.state.communities;
+      communitiesSort.sort();
+      this.setState({
+        communities: communitiesSort,
+      });
+    }
+  };
+
+  componentWillReceiveProps(nextProps) {
+    console.log("----------", nextProps);
+    if (nextProps.myCommunity) {
+      // let { myCommunity } = nextProps;
+      // let communityDetails = {
+      //   communities: myCommunity,
+      // };
+      this.setState({
+        communities: nextProps.myCommunity,
+      });
+      // this.setState(communityDetails);
+      // console.log("userData is : ", communityDetails);
+    }
+  }
+
   render() {
+    let list = this.state.communities;
+    console.log("comminaonio", list);
+    const currentPage = this.state.currentPage;
+    const itemsPerPage = this.state.itemsPerPage;
+
+    const indexOfLastTodo = currentPage * itemsPerPage;
+    const indexOfFirstTodo = indexOfLastTodo - itemsPerPage;
+
+    const currentItems = list.slice(indexOfFirstTodo, indexOfLastTodo);
+
+    const pageNumbers = [];
+
+    for (let i = 1; i <= Math.ceil(list.length / itemsPerPage); i++) {
+      pageNumbers.push(i);
+    }
+
+    let renderPageNumbers = null;
+
+    renderPageNumbers = (
+      <nav aria-label="Page navigation example" class="pagebar">
+        <ul class="pagination">
+          {pageNumbers.map((i) => (
+            <li class="page-item">
+              <a
+                key={i}
+                id={i}
+                onClick={() => {
+                  this.handleClick(i);
+                }}
+                class="page-link"
+                href="#"
+              >
+                {i}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </nav>
+    );
     return (
       <div className="container-fluid">
         <NavbarMain />
@@ -98,34 +121,48 @@ class MyCommunities extends Component {
           <div>
             <div className="float-right mt-2 d-flex w-25">
               <span className="float-left w-25 mt-1">Sort By </span>
-              <select className="form-control">
+              <select
+                className="form-control"
+                id="sortBy"
+                onChange={this.onChange}
+              >
                 <option>Default</option>
                 <option>Last Created</option>
                 <option>Number of Posts</option>
                 <option>Number of Users</option>
-                <option>Ascending</option>
+                <option value="Ascending">Ascending</option>
                 <option>Descending</option>
               </select>
             </div>
             <h1 className="mt-2">My Communities</h1>
           </div>
-          {this.state.communities.length > 0
-            ? this.state.communities.map((value) => (
+          {currentItems && currentItems.length > 0
+            ? currentItems.map((value) => (
                 <Card className="root">
                   <CardHeader
-                    avatar={<Avatar aria-label="recipe">R</Avatar>}
+                    avatar={
+                      <img
+                        src={logo}
+                        alt="profilepic"
+                        style={{
+                          height: "50px",
+                          width: "50px",
+                          borderRadius: "50%",
+                        }}
+                      />
+                    }
                     title={
                       <Link
                         to={{
                           pathname: "/viewCommunityProfile",
                           state: { community: value },
                         }}
-                        className="text-decoration-none text-dark text-uppercase"
+                        className="text-decoration-none text-dark text-uppercase h3"
                       >
                         {value.communityName}
                       </Link>
                     }
-                    subheader={value.createdAt}
+                    subheader={value.createdAt.split("T")[0]}
                   />
                   {/* <CardMedia
                     className={classes.media}
@@ -137,6 +174,7 @@ class MyCommunities extends Component {
                       variant="body2"
                       color="textSecondary"
                       component="p"
+                      className="text-justify"
                     >
                       {value.description}
                     </Typography>
@@ -151,7 +189,7 @@ class MyCommunities extends Component {
                         className="person-img"
                       ></img>
                     </IconButton>
-                    {value.communityMembers.length}
+                    {value.joinedUsers}
                     <IconButton>
                       <img
                         src={post}
@@ -161,15 +199,27 @@ class MyCommunities extends Component {
                         className="post-img"
                       ></img>
                     </IconButton>
-                    {value.posts.length}
+                    {value.totalPost}
                   </CardActions>
                 </Card>
               ))
             : ""}
+          <div className="mt-2">{renderPageNumbers}</div>
         </div>
       </div>
     );
   }
 }
 
-export default MyCommunities;
+MyCommunities.propTypes = {
+  getCommunity: PropTypes.func.isRequired,
+  myCommunity: PropTypes.object.isRequired,
+};
+
+const mapStateToProps = (state) => {
+  return {
+    myCommunity: state.myCommunity.myCommunity,
+  };
+};
+
+export default connect(mapStateToProps, { getCommunity })(MyCommunities);
