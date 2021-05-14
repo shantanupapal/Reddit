@@ -68,14 +68,10 @@ export default class ChatContent extends Component {
     render() {
         if (!this.state.current_chat) {
             return (
-                <div className="messagepane-card">
-                    <div className="error">
-                        You don’t have a message selected
-                    </div>
-                    <div className="error2">
-                        Choose one from your existing messages, or start a new
-                        one.
-                    </div>
+                <div className="main__chatbody">
+                    <h2>
+                        Please select a chat from chat list or start a new one
+                    </h2>
                 </div>
             );
         }

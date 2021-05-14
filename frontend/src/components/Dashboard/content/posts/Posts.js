@@ -16,7 +16,7 @@ class Comment extends Component {
 		this.state = { showModal: false, comment: "" };
 	}
 	upvoteComment = () => {
-		let communityName = this.props.match.params.name;
+		// let communityName = this.props.match.params.name;
 		let communityId = localStorage.getItem("communityid");
 		let user_id = localStorage.getItem("userid");
 		axios
@@ -30,16 +30,16 @@ class Comment extends Component {
 			})
 			.then((response) => {
 				// this.props.history.push("/community/" + communityName);
-				this.props.getCommunityData();
+				this.props.getPosts();
 				// window.reload();
-				console.log("Actions::response from vote", response.data);
+				// console.log("Actions::response from vote", response.data);
 			})
 			.catch((error) => {
 				console.log(error);
 			});
 	};
 	downvoteComment = () => {
-		let communityName = this.props.match.params.name;
+		// let communityName = this.props.match.params.name;
 		let communityId = localStorage.getItem("communityid");
 		let user_id = localStorage.getItem("userid");
 		axios
@@ -53,9 +53,9 @@ class Comment extends Component {
 			})
 			.then((response) => {
 				// this.props.history.push("/community/" + communityName);
-				this.props.getCommunityData();
+				this.props.getPosts();
 				// window.reload();
-				console.log("Actions::response from vote", response.data);
+				// console.log("Actions::response from vote", response.data);
 			})
 			.catch((error) => {
 				console.log(error);
@@ -71,7 +71,7 @@ class Comment extends Component {
 		this.setState({ comment: e.target.value });
 	};
 	submitComment = () => {
-		let communityName = this.props.match.params.name;
+		// let communityName = this.props.match.params.name;
 		let communityId = localStorage.getItem("communityid");
 		let user_id = localStorage.getItem("userid");
 		axios
@@ -83,10 +83,7 @@ class Comment extends Component {
 				content: this.state.comment,
 			})
 			.then((response) => {
-				// this.props.history.push("/community/" + communityName);
-				// this.props.getCommunityData();
-				// window.reload();
-				console.log("Actions::response from add comment on post", response.data);
+				this.props.getPosts();
 			})
 			.catch((error) => {
 				console.log(error);
@@ -100,9 +97,16 @@ class Comment extends Component {
 		}
 		return (
 			<div className="py-2">
-				<Modal show={this.state.showModal} size="lg" aria-labelledby="contained-modal-title-vcenter" centered>
+				<Modal
+					show={this.state.showModal}
+					size="lg"
+					aria-labelledby="contained-modal-title-vcenter"
+					centered
+				>
 					<Modal.Header closeButton>
-						<Modal.Title id="contained-modal-title-vcenter">Reply To Comment</Modal.Title>
+						<Modal.Title id="contained-modal-title-vcenter">
+							Reply To Comment
+						</Modal.Title>
 					</Modal.Header>
 					<Modal.Body>
 						<h4>Add Comment</h4>
@@ -148,12 +152,20 @@ class Comment extends Component {
 						<span className="text-xs font-extralight">
 							<b>CreatedBy</b>- {this.props.comment.commentedBy.userName}
 						</span>
-						<span className="text-xs font-extralight">At {this.props.comment.commentedAt}</span>
+						<span className="text-xs font-extralight">
+							At {this.props.comment.commentedAt}
+						</span>
 					</div>
 				</li>
 				{this.props.comment.nestedComments &&
 					this.props.comment.nestedComments.map((nestedComment) => {
-						return <Comment key={nestedComment._id} comment={nestedComment} nestedComment={true} />;
+						return (
+							<Comment
+								key={nestedComment._id}
+								comment={nestedComment}
+								nestedComment={true}
+							/>
+						);
 					})}
 			</div>
 		);
@@ -165,6 +177,7 @@ export class Posts extends Component {
 		asc: false,
 		showPopUp: false,
 		comments: [],
+		showReplyToPostModal: false,
 	};
 
 	handleClose = () => {
@@ -173,8 +186,8 @@ export class Posts extends Component {
 
 	handleShow = (id) => {
 		let comments = [];
-		console.log(id);
-		console.log(this.state.posts);
+		// console.log(id);
+		// console.log(this.state.posts);
 		const posts = this.state.posts;
 		posts.forEach((post) => {
 			if (post._id === id) {
@@ -182,15 +195,17 @@ export class Posts extends Component {
 			}
 		});
 		this.setState({ comments: comments });
-		console.log(comments);
+		// console.log(comments);
 		this.setState({ showPopUp: true });
 	};
 
-	componentWillMount = async () => {
+	getPosts = async () => {
 		const user_id = localStorage.getItem("userid");
 		// const user_id = "609453c6b6b2ec490cdbc0ce";
 
-		const Posts = await axios.get(`${backendURI}/dashboard/getallposts/${user_id}`);
+		const Posts = await axios.get(
+			`${backendURI}/dashboard/getallposts/${user_id}`
+		);
 
 		const allposts = [];
 
@@ -210,6 +225,9 @@ export class Posts extends Component {
 			posts: allposts,
 		});
 	};
+	componentDidMount() {
+		this.getPosts();
+	}
 
 	sortByVotes = () => {
 		const posts = this.state.posts;
@@ -313,58 +331,196 @@ export class Posts extends Component {
 		}
 	};
 
-	render() {
-		let comments = "loading";
-		if (this.state && this.state.comments.length) {
-			comments = this.state.comments.map((comment) => {
-				<div key={comment._id}>{comment.content}</div>;
+	downvotePost = (post_id) => {
+		// e.preventDefault();
+		// let communityName = this.props.match.params.name;
+		let communityId = localStorage.getItem("communityid");
+		let user_id = localStorage.getItem("userid");
+		axios
+			.post(`${backendURI}/api/communityhome1/vote/`, {
+				community_id: communityId,
+				user_id: user_id,
+				downvote: true,
+				upvote: false,
+				comment_id: null,
+				post_id: post_id,
+			})
+			.then((response) => {
+				this.getPosts();
+			})
+			.catch((error) => {
+				console.log(error);
 			});
-		}
+	};
 
+	upvotePost = (post_id) => {
+		// e.preventDefault();
+		// let communityName = this.props.match.params.name;
+		let communityId = localStorage.getItem("communityid");
+		let user_id = localStorage.getItem("userid");
+		axios
+			.post(`${backendURI}/api/communityhome1/vote/`, {
+				community_id: communityId,
+				user_id: user_id,
+				downvote: false,
+				upvote: true,
+				comment_id: null,
+				post_id: post_id,
+			})
+			.then((response) => {
+				this.getPosts();
+			})
+			.catch((error) => {
+				console.log(error);
+			});
+	};
+
+	replyToPost = () => {
+		this.setState({ showReplyToPostModal: true });
+	};
+	closeReplyToPostModal = () => {
+		this.setState({ showReplyToPostModal: false });
+	};
+	changePostComment = (e) => {
+		this.setState({ comment: e.target.value });
+	};
+	commentOnPost = (e) => {
+		e.preventDefault();
+		// let communityName = this.props.match.params.name;
+		let communityId = localStorage.getItem("communityid");
+		let user_id = localStorage.getItem("userid");
+		let post_id = localStorage.getItem("postid");
+		console.log("post_id");
+		axios
+			.post(`${backendURI}/api/communityhome1/add_comment/`, {
+				community_id: communityId,
+				user_id: user_id,
+				post_id: post_id,
+				comment_id: null,
+				content: this.state.comment,
+			})
+			.then((response) => {
+				this.getPosts();
+			})
+			.catch((error) => {
+				console.log(error);
+			});
+		this.setState({ showReplyToPostModal: false });
+	};
+	render() {
 		const posts = [];
 		if (this.state && this.state.posts) {
 			console.log(this.state.posts);
 			const allposts = this.state.posts;
 			for (let index = 0; index < allposts.length; index++) {
 				const post_id = allposts[index]._id;
+				const communityLink = "/community/" + allposts[index].communityName;
+				const userLink = "/ViewProfile/" + allposts[index].createdBy._id;
 				let postImage = null;
 				if (allposts[index].image) {
 					postImage = backendURI + "/images/" + allposts[index].image;
 				}
 				posts.push(
-					<div className="post">
-						<div className="post-sidebar">
-							<ArrowUpwardIcon className="upvote" />
-							<span>{allposts[index].votes}</span>
-							<ArrowDownwardIcon className="downvote" />
-						</div>
-						<div className="post-title">
-							<img src={user_image} alt="user_image" />
-							<span className="subreddit-name">r/{allposts[index].communityName}</span>
-							<span className="post-user">Posted by</span>
-							<span className="post-user underline">u/{allposts[index].createdBy.userName + " "}</span>
-							<span className="post-user">on</span>
-							<span className="post-user">{allposts[index].createdAt.split("T")[0]}</span>
-							<div className="spacer"></div>
-						</div>
-						<div className="post-body">
-							<span className="title">{allposts[index].title}</span>
-
-							{postImage && <img src={postImage} alt="Imageinpost" />}
-							{allposts[index].body && <span className="description">{allposts[index].body}</span>}
-						</div>
-						<div>
-							<div className="post-footer">
-								<div
-									className="comments footer-action"
+					<>
+						<Modal
+							show={this.state.showReplyToPostModal}
+							size="lg"
+							aria-labelledby="contained-modal-title-vcenter"
+							centered
+						>
+							<Modal.Header closeButton>
+								<Modal.Title id="contained-modal-title-vcenter">
+									Reply To Post
+								</Modal.Title>
+							</Modal.Header>
+							<Modal.Body>
+								<h4>Add Comment</h4>
+								<input
+									name="addCommentToPost"
+									id="addCommentToPost"
+									type="text"
+									placeholder="Reply"
+									className="form-control my-3 p-4"
+									required
+									onChange={this.changePostComment}
+								/>
+							</Modal.Body>
+							<Modal.Footer>
+								<Button onClick={this.closeReplyToPostModal}>Close</Button>
+								<Button variant="success" onClick={this.commentOnPost}>
+									Comment
+								</Button>
+							</Modal.Footer>
+						</Modal>
+						<div className="post" key={post_id}>
+							<div className="post-sidebar">
+								<ArrowUpwardIcon
+									className="upvote"
 									onClick={() => {
-										this.handleShow(allposts[index]._id);
+										this.upvotePost(post_id);
 									}}
-								>
-									<ModeCommentIcon className="comment-icon" />
+								/>
+								<span>{allposts[index].votes}</span>
+								<ArrowDownwardIcon
+									className="downvote"
+									onClick={() => {
+										this.downvotePost(post_id);
+									}}
+								/>
+							</div>
+							<div className="post-title">
+								<img src={user_image} alt="user_image" />
+								<Link to={communityLink} className="comm-link">
+									<span className="subreddit-name">
+										r/{allposts[index].communityName}
+									</span>
+								</Link>
+
+								<span className="post-user">Posted by</span>
+								<Link to={userLink} className="comm-link">
+									<span className="post-user underline">
+										u/
+										{allposts[index].createdBy.userName + " "}
+									</span>
+								</Link>
+
+								<span className="post-user">on</span>
+								<span className="post-user">
+									{allposts[index].createdAt.split("T")[0]}
+								</span>
+								<div className="spacer"></div>
+							</div>
+							<div className="post-body">
+								<span className="title">{allposts[index].title}</span>
+
+								{postImage && <img src={postImage} alt="Imageinpost" />}
+								{allposts[index].body && (
+									<span className="description">{allposts[index].body}</span>
+								)}
+							</div>
+							<div>
+								<div className="post-footer">
+									<div
+										className="comments footer-action"
+										onClick={() => {
+											this.handleShow(allposts[index]._id);
+										}}
+									>
+										<ModeCommentIcon className="comment-icon" />
+										<div>{allposts[index].comments.length} Comments</div>
+										<div
+											onClick={() => {
+												localStorage.setItem("postid", post_id);
+												this.replyToPost();
+											}}
+										>
+											+
+										</div>
+									</div>
 								</div>
 							</div>
-							<div>{allposts[index].comments.length} Comments</div>
+						</div>
+						<div className="comments">
 							<div>
 								{allposts[index].comments &&
 									allposts[index].comments.map((comment) => {
@@ -373,13 +529,14 @@ export class Posts extends Component {
 												key={comment._id}
 												comment={comment}
 												nestedComment={false}
+												getPosts={this.getPosts}
 												{...this.props}
 											/>
 										);
 									})}
 							</div>
 						</div>
-					</div>
+					</>
 				);
 			}
 		}

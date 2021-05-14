@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import NavbarMain from "../Layout/NavbarMain";
+import { Redirect } from "react-router";
 import Card from "@material-ui/core/Card";
 import CardHeader from "@material-ui/core/CardHeader";
 import CardContent from "@material-ui/core/CardContent";
@@ -12,6 +13,7 @@ import post from "../../images/post.svg";
 import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
+import { backendURI } from "../../utils/config";
 import logo from "../../images/default_logo.png";
 import { getCommunity } from "../../redux/actions/myCommunityActions";
 
@@ -154,6 +156,11 @@ class MyCommunities extends Component {
       : 0;
   };
 
+  getImage = (img) => {
+    console.log("img is", img);
+    return `${backendURI}/api/images/com_image/${img}`;
+  };
+
   componentWillReceiveProps(nextProps) {
     console.log("----------", nextProps);
     if (nextProps.myCommunity) {
@@ -171,6 +178,10 @@ class MyCommunities extends Component {
   }
 
   render() {
+    let redirectVar = null;
+    if (!localStorage.getItem("token")) {
+      redirectVar = <Redirect to="/Login" />;
+    }
     let list = this.state.communities;
     console.log("comminaonio", list);
     const currentPage = this.state.currentPage;
@@ -212,6 +223,7 @@ class MyCommunities extends Component {
     );
     return (
       <div className="container-fluid">
+        {redirectVar}
         <NavbarMain />
         <div className="container">
           <div>
@@ -238,7 +250,7 @@ class MyCommunities extends Component {
                   <CardHeader
                     avatar={
                       <img
-                        src={logo}
+                        src={this.getImage(value.communityImage)}
                         alt="profilepic"
                         style={{
                           height: "50px",
