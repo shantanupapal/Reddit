@@ -52,7 +52,7 @@ class Signup extends Component {
 					localStorage.setItem("email", userData.email);
 					localStorage.setItem("userName", userData.userName);
 					console.log("Redirecting to home");
-					redirectVar = <Redirect to="/Profile" />;
+					redirectVar = <Redirect to="/Dashboard" />;
 				}
 			} else if (this.props.user === "EMAIL_EXISTS" && this.state.signupFlag) {
 				displayMessage =

@@ -49,7 +49,7 @@ class Login extends Component {
 				localStorage.setItem("email", userData.email);
 				localStorage.setItem("userName", userData.userName);
 				console.log("Redirecting to home");
-				redirectVar = <Redirect to="/Profile" />;
+				redirectVar = <Redirect to="/Dashboard" />;
 			}
 		} else if (this.props.user) {
 			if (this.props.user === "NO_USER" && this.state.loginFlag) {
