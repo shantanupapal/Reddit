@@ -1,5 +1,5 @@
 import React from "react";
-import Searchbar from "./Searchbar";
+//import Searchbar from "./Searchbar";
 import NavDropDown from "./NavDropDown";
 import NavDropDownOne from "./NavDropDownOne";
 import logo from "../../images/reddit-logo.svg";
@@ -16,7 +16,7 @@ const NavbarMain = () => {
 					style={{ width: "150px", float: "left" }}
 				/>
 				<NavDropDownOne />
-				<Searchbar />
+				{/* <Searchbar /> */}
 				<NavDropDown />
 			</div>
 		</nav>
