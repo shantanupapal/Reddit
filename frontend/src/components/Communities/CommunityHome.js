@@ -94,6 +94,10 @@ class SinglePost extends Component {
 	};
 	render() {
 		console.log(this.props);
+		let postImage = null;
+		if (this.props.post.image) {
+			postImage = backendURI + "/images/" + this.props.post.image;
+		}
 		return (
 			<div>
 				<Modal
@@ -152,6 +156,8 @@ class SinglePost extends Component {
 					<div className="border-bottom pb-2">
 						<span>{this.props.post.body} </span>
 					</div>
+					<div className="border-bottom pb-2">{postImage && <img src={postImage} alt="Imageinpost" />}</div>
+
 					<div className="pt-2">
 						<div className="text-xs font-extralight">Comments</div>
 						{this.props.post.comments &&
@@ -202,21 +208,23 @@ class Posts extends Component {
 				link: this.state.postLink,
 			})
 			.then((response) => {
+				let postId = response.data.post_id;
+				let photoData = new FormData();
+				photoData.append("file", this.state.postImage);
+				photoData.append("post_id", postId);
+				console.log("photoData", photoData);
+				axios.defaults.withCredentials = true;
+				axios.defaults.headers.common["authorization"] = localStorage.getItem("token");
+				axios
+					.post(`${backendURI}/api/communityhome1/add_image_to_post/`, photoData)
+					.then((response) => {
+						console.log("Status Code : ", response.status);
+						console.log("resp: ", response);
+					})
+					.catch((error) => {
+						console.log(error);
+					});
 				this.props.getCommunityData();
-				// window.reload();
-				// this.props.history.push("/community/" + communityName);
-				// let photoData = new FormData();
-				// photoData.append("file", this.state.postImage);
-				// axios
-				// 	.post(`${backendURI}/api/communityhome1/add_photo_to_post/`, photoData)
-				// 	.then((response) => {
-				// 		console.log("Status Code : ", response.status);
-				// 		console.log("resp: ", response);
-				// 	})
-				// 	.catch((error) => {
-				// 		console.log(error);
-				// 	});
-				// console.log("Actions::response from join community", response.data);
 			})
 			.catch((error) => {
 				console.log(error);
