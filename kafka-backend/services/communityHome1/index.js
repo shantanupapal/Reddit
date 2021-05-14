@@ -3,6 +3,7 @@ const { joinLeaveCommunity } = require("./joinLeaveCommunity");
 const { addComment } = require("./addComment");
 const { addPost } = require("./addPost");
 const { vote } = require("./vote");
+const { addImageToPost } = require("./addImageToPost");
 
 let handle_request = (msg, callback) => {
 	switch (msg.route) {
@@ -17,6 +18,9 @@ let handle_request = (msg, callback) => {
 			break;
 		case "vote":
 			vote(msg, callback);
+			break;
+		case "add_image_to_post":
+			addImageToPost(msg, callback);
 			break;
 	}
 };

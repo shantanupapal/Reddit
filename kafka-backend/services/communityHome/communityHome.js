@@ -17,7 +17,8 @@ let getCommunity = async (msg, callback) => {
 		let community = await Community.find({ communityName: msg.communityName })
 			.populate({ path: "communityMembers._id" })
 			.populate({ path: "createdBy" })
-			.populate({ path: "posts", populate: { path: "comments", populate: { path: "nestedComments" } } });
+			.populate({ path: "posts", populate: { path: "comments", populate: { path: "nestedComments" } } })
+			.populate({ path: "posts", populate: { path: "createdBy" } });
 
 		console.log("community data is: ", community);
 		if (community && community.length > 0) {
