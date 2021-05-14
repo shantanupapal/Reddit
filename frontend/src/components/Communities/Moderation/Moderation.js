@@ -1,10 +1,8 @@
 import React, { Component } from "react";
 import NavbarMain from "../../Layout/NavbarMain";
-import { Redirect } from "react-router";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { getAllCommunities } from "../../../redux/actions/moderationActions";
-import { Link } from "react-router-dom";
 import Card from "@material-ui/core/Card";
 import CardHeader from "@material-ui/core/CardHeader";
 import CardActions from "@material-ui/core/CardActions";
