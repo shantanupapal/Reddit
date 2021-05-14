@@ -28,6 +28,7 @@ let addPost = async (msg, callback) => {
 			comments: [],
 			createdBy: msg.user_id,
 			createdAt: new Date(),
+			communityId: msg.community_id,
 		});
 
 		new_post.save(new_post, async (err, result) => {

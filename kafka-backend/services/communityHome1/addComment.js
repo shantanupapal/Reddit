@@ -15,6 +15,7 @@ let addComment = async (msg, callback) => {
 			votes: 0,
 			commentedBy: msg.user_id,
 			nestedComments: [],
+			communityId: msg.community_id,
 		});
 		// console.log("----------------", msg);
 		if (msg.comment_id !== null) {
